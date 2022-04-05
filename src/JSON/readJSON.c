@@ -9,8 +9,8 @@ int main()
     char            buf[256];
     /* 초기화 */
     sprintf(buf, "../../data/book/%s.json", filename);
-    rootValue = json_parse_file(buf);      // JSON 파일을 읽어서 파싱
-    rootObject = json_value_get_object(rootValue);    // JSON_Value에서 JSON_Object를 얻음
+    rootValue   = json_parse_file(buf);      // JSON 파일을 읽어서 파싱
+    rootObject  = json_value_get_object(rootValue);    // JSON_Value에서 JSON_Object를 얻음
     
     /* 사용 */
     // 객체에서 키에 해당하는 문자열을 가져옴
