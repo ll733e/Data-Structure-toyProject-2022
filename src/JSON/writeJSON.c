@@ -6,7 +6,7 @@ int main()
     // JSON 문서에 저장할 데이터
     char    *title      = "혼자 공부하는 머신러닝+딥러닝";
     int     year        = 2020;
-    char    actors[][30] = {
+    char    Author[][30] = {
         "박혜선"
     };
     char    *isbn       = "9791162243664";
@@ -17,8 +17,8 @@ int main()
     fprintf(fp, "{\n");
     fprintf(fp, "   \"Title\": \"%s\",\n", title);
     fprintf(fp, "   \"Year\": %d,\n", year);
-    fprintf(fp, "   \"Actors\": [\n");
-    fprintf(fp, "       \"%s\" \n", actors[0]);
+    fprintf(fp, "   \"Author\": [\n");
+    fprintf(fp, "       \"%s\" \n", Author[0]);
     fprintf(fp, "   ],\n");
     fprintf(fp, "   \"ISBN\": \"%s\"\n", isbn);
     fprintf(fp, "}\n");
