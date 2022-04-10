@@ -2,7 +2,9 @@
 # TRY THIS >> chmod 755 clean.sh
 #!/bin/bash
 echo "CMAKE DUMMY 빌드 파일들을 지웁니다."
-cd $(pwd)
+
+DIR="$( cd "$( dirname "$0" )" && pwd -P )"
+cd $DIR
 sudo rm -rf CMakeCache.txt
 sudo rm -rf Makefile
 sudo rm -rf cmake_install.cmake
@@ -16,4 +18,10 @@ cmake CMakeLists.txt
 wait
 make
 
-./start.out
+sudo rm -rf CMakeCache.txt
+sudo rm -rf Makefile
+sudo rm -rf cmake_install.cmake
+sudo rm -rf CMakeFiles/*
+y
+sudo rmdir $(pwd)/CMakeFiles
+
