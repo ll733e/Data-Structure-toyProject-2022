@@ -1,4 +1,19 @@
-#include "BookNode.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include "../types.h"
+
+typedef struct NODE {
+    char        *Title[300];
+    char        *Author[100];
+    char        *ISBN[13];
+    char        *Year[4];
+    int         ID;
+    struct      NODE    *next;
+}   bookNode;
+
+struct NODE    *pHead = NULL;
+struct NODE    *pTail = NULL;
 
 void freNode() {
     bookNode*   pTemp;
@@ -31,11 +46,10 @@ void insNode(   char  *inTitle,
                 char  *inAuthor, 
                 char  *inISBN, 
                 char  *inYear) {
-
-    bookNode    *pNewNode;          NodeID++;
+    bookNode    *pNewNode;
     pNewNode = (bookNode*)malloc(sizeof(bookNode));
 
-    pNewNode->ID        = NodeID;
+    pNewNode->ID        = 10;
     *pNewNode->Title    = inTitle;
     *pNewNode->Author   = inAuthor;
     *pNewNode->ISBN     = inISBN;
@@ -51,3 +65,20 @@ void insNode(   char  *inTitle,
 }
 //void delNode(unsigned int id);
 //void delList(void);
+
+int main(int argc,char* argv[]) {
+    
+    char    *Title    = "AMDF";
+    char    *Author   = "asd";
+    char    *ISBN     = "123123";
+    char    *Year     = "2021";
+    char buf[256]={"Books.dat"};
+    FILE *fp = fopen(buf,"a+b");
+    insNode(Title, Author, ISBN, Year);
+    if(argc !=5) return -1;
+    for(int i=1;i<5;i++){
+        fwrite(argv[i],strlen(argv[i]),1,fp);
+    }
+    prtNode();
+    fclose(fp);
+}
