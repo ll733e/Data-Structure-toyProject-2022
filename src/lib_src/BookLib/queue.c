@@ -46,7 +46,7 @@ void enqueue(QueueType *q, element item)
 element dequeue(QueueType *q)
 {
     if (is_empty(q))
-        eroor("예약이 공백상태다");
+        error("예약이 공백상태다");
     q->front = (q->front + 1) % MAX_QUEUE_SIZE;
     return q->data[q->front];
 }
