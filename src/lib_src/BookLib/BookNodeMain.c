@@ -67,14 +67,18 @@ void insNode(   char  *inTitle,
 //void delList(void);
 
 int main(int argc,char* argv[]) {
-    
+    /*
     char    *Title    = "AMDF";
     char    *Author   = "asd";
     char    *ISBN     = "123123";
     char    *Year     = "2021";
+    */
+
     char buf[256]={"Books.dat"};
     FILE *fp = fopen(buf,"a+b");
-    insNode(Title, Author, ISBN, Year);
+
+    //insNode(Title, Author, ISBN, Year);
+    insNode(argv[1],argv[2],argv[3],argv[4]);
     if(argc !=5) return -1;
     for(int i=1;i<5;i++){
         fwrite(argv[i],strlen(argv[i]),1,fp);
