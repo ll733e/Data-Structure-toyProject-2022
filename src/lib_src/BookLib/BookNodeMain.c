@@ -83,6 +83,7 @@ int main(int argc,char* argv[]) {
     for(int i=1;i<5;i++){
         fwrite(argv[i],strlen(argv[i]),1,fp);
     }
+    fwrite("\n",strlen("\n"),1,fp);
     prtNode();
     fclose(fp);
 }
