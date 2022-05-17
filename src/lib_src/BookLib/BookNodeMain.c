@@ -85,6 +85,5 @@ int main(int argc,char* argv[]) {
     }
     fwrite("\n",strlen("\n"),1,fp);
     prtNode();
-    test();
     fclose(fp);
 }
