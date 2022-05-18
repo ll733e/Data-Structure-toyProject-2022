@@ -67,23 +67,30 @@ void insNode(   char  *inTitle,
 //void delList(void);
 
 int main(int argc,char* argv[]) {
-    /*
-    char    *Title    = "AMDF";
-    char    *Author   = "asd";
-    char    *ISBN     = "123123";
-    char    *Year     = "2021";
-    */
+	if(argc!=5) return -1;
 
-    char buf[256]={"Books.dat"};
-    FILE *fp = fopen(buf,"a+b");
+	char buf[256]={"Books.dat"};
+	char record[]={"ID.dat"};
+	int id;
+	FILE *fp = fopen(buf,"a+b");
+	FILE *ID = fopen(record,"r");
 
-    //insNode(Title, Author, ISBN, Year);
-    insNode(argv[1],argv[2],argv[3],argv[4]);
-    if(argc !=5) return -1;
-    for(int i=1;i<5;i++){
-        fwrite(argv[i],strlen(argv[i]),1,fp);
-    }
-    fwrite("\n",strlen("\n"),1,fp);
-    prtNode();
-    fclose(fp);
+	//insNode(Title, Author, ISBN, Year);
+	insNode(argv[1],argv[2],argv[3],argv[4]);
+	fscanf(ID,"%d",&id);
+
+	fprintf(fp,"%d",id);
+	fclose(ID);
+
+	id++;
+	ID = fopen(record,"w");
+	fprintf(ID,"%d",id);
+
+	for(int i=1;i<5;i++){
+		fwrite("/",strlen("/"),1,fp);
+		fwrite(argv[i],strlen(argv[i]),1,fp);
+	}
+	fwrite("\n",strlen("\n"),1,fp);
+	prtNode();
+	fclose(fp);
 }
