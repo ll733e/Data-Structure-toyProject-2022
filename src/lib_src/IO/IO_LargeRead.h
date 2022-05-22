@@ -12,11 +12,16 @@ typedef struct NODE {
 
 struct NODE    *pHead = NULL;
 struct NODE    *pTail = NULL;
+/*      Linked List      */
+void    freNode();
+void    prtNode();
+void    insNode();
+void    desNode(unsigned int id);
+void    delNode(bookNode* delete);
 
-void freNode();
-void prtNode();
-void insNode();
-//void delNode(unsigned int id);
-//void delList(void);
+/*      File I/O        */
+void    FILELOAD();
+void    FILESAVE();
+void    FILEMODIFY();
 
 #endif  // __IO_LARGEREAD_H__

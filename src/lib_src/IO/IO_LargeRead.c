@@ -4,6 +4,8 @@
 #include "IO_LargeRead.h"
 #include "../types.h"
 
+static unsigned int     NodeID = 0;
+
 void freNode() {
     bookNode*   pTemp;
 
@@ -15,7 +17,6 @@ void freNode() {
 }
 
 void prtNode() {
-
     bookNode    *pCurrentNode = pHead;
     uint32      nCount        = 0;
 
@@ -38,7 +39,7 @@ void insNode(   char  *inTitle,
     bookNode    *pNewNode;
     pNewNode = (bookNode*)malloc(sizeof(bookNode));
 
-    pNewNode->ID        = 10;
+    pNewNode->ID        = NodeID;
     *pNewNode->Title    = inTitle;
     *pNewNode->Author   = inAuthor;
     *pNewNode->ISBN     = inISBN;
@@ -52,9 +53,26 @@ void insNode(   char  *inTitle,
         pTail = pNewNode;
     }
 }
-//void delNode(unsigned int id);
-//void delList(void);
+
+void desNode(unsigned int id) {
+    if(pHead == NULL)
+        return;
+    bookNode* cur = pHead;
+    
+    if(cur->ID == id) {
+        pHead = cur->next;
+        delNode(cur);
+    }
+    return;
+}
+
+void delNode(bookNode* delete) {
+    free(delete);
+    delete = NULL;
+}
+
 int main(int argc, char* argv[]) {
-    insNode("ADF", "Asdf", "1012391", "asdf");
+    if(argc != 5) return -1;
+    insNode(argv[1], argv[2], argv[3], argv[4]);
     prtNode();
 }

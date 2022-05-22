@@ -1,8 +1,7 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include "IO_LargeRead.h"
 
 int main(int argc, char* argv[]) {
-    insNode("ADF", "Asdf", "1012391", "asdf");
+    if(argc != 5) return -1;
+    insNode(argv[1], argv[2], argv[3], argv[4]);
     prtNode();
 }
