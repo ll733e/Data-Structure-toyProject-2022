@@ -62,6 +62,7 @@ typedef struct{
 	UINT uChainVar[SHA256_DIGEST_VALUELEN / 4];
 	UINT uHighLength;
 	UINT uLowLength;
+	UINT remain_num;
 	BYTE szBuffer[SHA256_DIGEST_BLOCKLEN];
 } SHA256_INFO;
 

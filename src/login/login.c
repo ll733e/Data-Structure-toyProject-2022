@@ -1,9 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include "KISA_SHA256.h"
-#include <../src/lib_src/JSON/parson.h>
-
-
+#include </mnt/c/Users/dudgh/Data-Structures-Algorithms/src/lib_src/JSON/parson.h>
 
 void add_user(char* ID, char* PW){
 	//char ID_encrpyt[10];
@@ -18,7 +15,7 @@ void add_user(char* ID, char* PW){
 	read(0, PW, 12);//최대 12자리까지만 가능하도록 예상
 
 	//SHA256_Encrpyt(ID, strlen(ID), ID_encrpyt);
-	SHA256_Encrpyt(PW, strlen(PW), PW_encrpyt);
+	//SHA256_Encrpyt(PW, strlen(PW), PW_encrpyt);
 
 	json_object_set_string(rootObject, "Title", "Account");
 	json_object_set_string(rootObject, "ID", ID);
