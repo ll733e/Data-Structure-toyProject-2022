@@ -14,5 +14,5 @@ void            prtUser();      // 사용자 정보 출력 (대출 권수, 대�
 void            logUser();      // 사용자 로그인 기능 함수
 unsigned int    getUser();      // 사용자 정보 가져오기
 
-#endif  // _PID_H__
+#endif  // _IAM_H__
 

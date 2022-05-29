@@ -5,8 +5,8 @@
 #define __IO_LARGEREAD_H__
 
 typedef struct NODE {
-    char        *Title[300];
-    char        *Author[100];
+    char        *Title;
+    char        *Author;
     char        *ISBN[13];
     char        *Year[4];
     int         ID;
@@ -23,6 +23,8 @@ void    desNode(unsigned int id);
 void    delNode(bookNode* delete);
 
 /*      File I/O        */
+void    LOOKHEAD();     // 헤더가 있는지 확인
+void    MAKEHEAD();     // 헤더 생성
 void    FILELOAD();
 void    FILESAVE();
 void    FILEMODIFY();
