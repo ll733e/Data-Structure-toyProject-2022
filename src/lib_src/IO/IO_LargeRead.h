@@ -1,3 +1,6 @@
+/*
+    LARGEREAD는 책을 모아놓은 빅데이터의 입출력을 담당하는 라이브러리입니다.
+*/
 #ifndef __IO_LARGEREAD_H__
 #define __IO_LARGEREAD_H__
 
