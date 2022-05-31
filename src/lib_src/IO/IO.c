@@ -3,14 +3,18 @@
 #include <string.h>
 #include "../types.h"
 
-#define     oriFILE     "../../../data/liblist.dat"        // 원본파일
+#if OS
+#define     oriFILE     "../../../data/liblist.test"        // 원본파일
 #define     bakFILE     "../../../data/liblist.bak"       // 백업파일
+#else
+#define     oriFILE     "liblist.test"
+#endif
 
 typedef struct Book {
     char    *TITLE;     // 책 이름
     char    *AUTHOR;    // 저자 이름
-    uint32  ISBN;       // ISBN
-    uint32  YEAR;       // 발행연도
+    char    *ISBN;       // ISBN
+    char    *YEAR;       // 발행연도
 }   Book;
 
 typedef struct Node {
@@ -18,13 +22,13 @@ typedef struct Node {
     struct  Node    *pNext;
 } Node;
 
-Node* pHead = NULL;
-Node* pTail = NULL;
+Node*   pHead = NULL;
+Node*   pTail = NULL;
 
 void FILELOAD() {
     FILE*   RFP;
     Book    book[10];
-    char    line[256];
+    char    line[150];
     char    *ptH;               // strTOK
     char    bufTitle[256];      // 제목 BUF
     char    bufAuthor[256];     // 저자 BUF
@@ -32,25 +36,26 @@ void FILELOAD() {
     int     lenAuthor;          // 저자 길이
     int     curnum = 0;
     int     tolnum = 0;
-    
 
-    RFP = fopen(oriFILE, "r");
-    /*      TO LOAD ALL FILE         */
-    while(fgets(line, sizeof(line), RFP) != NULL) {
-        ptH = strtok(NULL, "|");    strcpy(book[curnum].TITLE, ptH); 
-        ptH = strtok(NULL, "|");    strcpy(book[curnum].AUTHOR, ptH);
-        ptH = strtok(NULL, "|");    book[curnum].ISBN = atoi(ptH);
-        ptH = strtok(NULL, "|");    book[curnum].YEAR = atoi(ptH);
+    // Windows : (OD) OA, MAC : OA;
+    RFP = fopen(oriFILE, "r+t");
+    fgets(line, sizeof(line), RFP);
+    /*      TO LOAD ALL FILE       */ 
+
+    while(!feof(RFP)) {
+        ptH = strtok(NULL, "|");    book[curnum].TITLE = ptH; 
+        ptH = strtok(NULL, "|");    book[curnum].AUTHOR = ptH;
+        ptH = strtok(NULL, "|");    book[curnum].ISBN = ptH;
+        ptH = strtok(NULL, "|");    book[curnum].YEAR = ptH;
         curnum++;
-    } 
-    //fseek(RFP, 0, SEEK_CUR);
+    }
+    //printf("tol : %d\ncol : %d\n", tolnum, curnum);
     fclose(RFP);
-    //fprintf(RFP, "%d", curnum);
-
     
 }
 
 int main() {
     FILELOAD();
+
 
 }

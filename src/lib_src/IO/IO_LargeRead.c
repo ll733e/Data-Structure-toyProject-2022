@@ -7,7 +7,11 @@
 #define     locDIR      "../../../data/"       // 디렉토리
 #define     oriFILE     "liblist.dat"        // 원본파일
 #define     bakFILE     "liblist.bak"       // 백업파일
+
+#if HEAD
 #define     HEADSTRING  "KOREA UNIV CYBER SECURITY DATA STRUCTURES08\n"
+#endif
+
 static unsigned int     NodeID = 0;
 static unsigned int     ID = 0;
 
@@ -75,18 +79,18 @@ void delNode(bookNode* delete) {
 
 void FILELOAD() {
     char        DIR[256];
-    int test = 100;
+    int         test = 100;
     bookNode    BK;
-    FILE    *RFP, *WFP;
+    FILE        *RFP, *WFP;
     sprintf(DIR, "%s%s", locDIR, oriFILE);
 
     RFP = fopen(DIR, "a+");
     
     
 }
+
 int main(int argc, char* argv[]) {
 //    if(argc != 5) return -1;
-    LOOKHEAD();
     FILELOAD();
     //insNode(argv[1], argv[2], argv[3], argv[4]);
     //prtNode();
