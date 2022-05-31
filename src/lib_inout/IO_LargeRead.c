@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "IO_LargeRead.h"
-#include "../types.h"
+#include "..//lib_type/types.h"
 
 #define     locDIR      "../../../data/"       // 디렉토리
 #define     oriFILE     "liblist.dat"        // 원본파일

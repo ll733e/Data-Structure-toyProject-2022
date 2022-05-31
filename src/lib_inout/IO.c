@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "../types.h"
+#include "..//lib_type/types.h"
 
 #if OS
 #define     oriFILE     "../../../data/liblist.test"        // 원본파일

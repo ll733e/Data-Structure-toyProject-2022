@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <string.h>
-#include <../JSON/parson.h>
+#include "..//lib_json//parson.h"
 #include "IAM.h"
 
 void addUser(char* ID, char* PW) {
