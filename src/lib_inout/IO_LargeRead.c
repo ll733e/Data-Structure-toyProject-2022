@@ -2,9 +2,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include "IO_LargeRead.h"
-#include "../types.h"
+#include "..//lib_type/types.h"
+
+#define     locDIR      "../../../data/"       // 디렉토리
+#define     oriFILE     "liblist.dat"        // 원본파일
+#define     bakFILE     "liblist.bak"       // 백업파일
+
+#if HEAD
+#define     HEADSTRING  "KOREA UNIV CYBER SECURITY DATA STRUCTURES08\n"
+#endif
 
 static unsigned int     NodeID = 0;
+static unsigned int     ID = 0;
 
 void freNode() {
     bookNode*   pTemp;
@@ -32,10 +41,7 @@ void prtNode() {
     }
 }
 
-void insNode(   char  *inTitle, 
-                char  *inAuthor, 
-                char  *inISBN, 
-                char  *inYear) {
+void insNode(   char  *inTitle, char  *inAuthor, char  *inISBN, char  *inYear) {
     bookNode    *pNewNode;
     pNewNode = (bookNode*)malloc(sizeof(bookNode));
 
@@ -71,8 +77,21 @@ void delNode(bookNode* delete) {
     delete = NULL;
 }
 
+void FILELOAD() {
+    char        DIR[256];
+    int         test = 100;
+    bookNode    BK;
+    FILE        *RFP, *WFP;
+    sprintf(DIR, "%s%s", locDIR, oriFILE);
+
+    RFP = fopen(DIR, "a+");
+    
+    
+}
+
 int main(int argc, char* argv[]) {
-    if(argc != 5) return -1;
-    insNode(argv[1], argv[2], argv[3], argv[4]);
-    prtNode();
+//    if(argc != 5) return -1;
+    FILELOAD();
+    //insNode(argv[1], argv[2], argv[3], argv[4]);
+    //prtNode();
 }
