@@ -4,7 +4,7 @@
 #include "IO_LargeRead.h"
 #include "../types.h"
 
-#define     locDIR      "../../../data/"      // 디렉토리
+#define     locDIR      "../../../data/"       // 디렉토리
 #define     oriFILE     "liblist.dat"        // 원본파일
 #define     bakFILE     "liblist.bak"       // 백업파일
 
