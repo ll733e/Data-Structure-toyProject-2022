@@ -1,8 +1,11 @@
 {
-   "id": "202131",
+   "id": "Integer Number",
    "hash": "hash value of password",
    "rent": [
        "", "", ""
-   ],
-   "item": 0
+    ],
+   "wating": [
+       "", "", ""
+    ],
+    "blocked": false
 }
