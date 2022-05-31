@@ -1,8 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
-#include "/mnt/c/Users/dudgh/Data-Structures-Algorithms/src/lib_src/JSON/parson.h"
-
+#include "..//lib_json//parson.h"
 
 void add_user(char* ID, char* PW){
 	//char ID_encrpyt[10];
