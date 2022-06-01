@@ -1,10 +1,10 @@
 {
-   "id": "Integer Number",
+   "ID": "Integer Number",
    "hash": "hash value of password",
    "rent": [
        "", "", ""
     ],
-   "wating": [
+   "waiting": [
        "", "", ""
     ],
     "blocked": false
