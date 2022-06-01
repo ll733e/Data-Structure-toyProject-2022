@@ -15,7 +15,7 @@ function send_req($req)
         $conn = socket_connect($sock, "127.0.0.1", 8080);
         if(!$conn) return '{"res":-1,"msg":"Unable to connect to Back-End Server"}';
         socket_write($sock, $reqs, strlen($reqs));
-        $res = socket_read($sock, 1024);
+        $res = socket_read($sock, 2048);
     }
     catch(Exception $e)
     {
@@ -28,7 +28,7 @@ function send_req($req)
     if($res) return $res;
     return '{"res":-1, "msg":"Unknown Error occured"}';
 }
-if($_POST["type"] == "login") //login req
+if($_POST["type"] == "login")
 {
     if(!isset($_SESSION["ID"]))
     {
@@ -62,19 +62,40 @@ else if($_POST["type"] == "booklist")
     $req["reqType"] = 5;
     $req["req"]["query"] = $_POST["searchQuery"];
     $req["req"]["qType"] = $_POST["searchType"];
-    $req["req"]["limit"] = (is_numeric($_POST["limit"]) && intval($_POST["limit"]) <= 20 && intval($_POST["limit"]) > 0 ) ? intval($_POST["limit"]) : 20 ;
+    $req["req"]["limit"] = (is_numeric($_POST["limit"]) && intval($_POST["limit"]) <= 20 && intval($_POST["limit"]) > 0 ) ? intval($_POST["limit"]) : 20;
+    $req["req"]["page"] = (is_numeric($_POST["page"]) && intval($_POST["limit"]) > 0 ) ? intval($_POST["limit"]) : 1;
 
     $res = send_req($req);
 
     echo $res;
 }
-else if($_POST["type"] == "rent")
+else if($_POST["type"] == "rental")
 {
+    if(isset($_SESSION["ID"]))
+    {
+        $req["reqType"] = 7;
+        $req["req"]["isbn"] = $_POST["isbn"];
+        $req["req"]["ID"] = $_SESSION["ID"];
 
+        $res = send_req($req);
+
+        echo $res;
+    }
+    else echo('{"res":-1, "msg":"User not logged in"}');
 }
 else if($_POST["type"] == "return")
 {
+    if(isset($_SESSION["ID"]))
+    {
+        $req["reqType"] = 9;
+        $req["req"]["isbn"] = $_POST["isbn"];
+        $req["req"]["ID"] = $_SESSION["ID"];
 
+        $res = send_req($req);
+
+        echo $res;
+    }
+    else echo('{"res":-1, "msg":"User not logged in"}');
 }
 else
 {

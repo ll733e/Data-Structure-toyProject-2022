@@ -8,7 +8,7 @@ function search_book()
     {
         booklist.innerHTML = "";
         var res = JSON.parse(post.responseText);
-        if(res.res)
+        if(res.res == 1)
         {
             for(var row of res.result)
             {
