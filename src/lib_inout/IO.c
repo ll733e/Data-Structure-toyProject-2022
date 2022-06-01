@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "IO.h"
-#include "..//lib_type/types.h"
+#include "..//lib_type//types.h"
 
 int countFile() {
     FILE*   RFP;
@@ -33,6 +33,15 @@ void addNode(Book _book) {
     pTail = curNode;
 }
 
+void deleteEndString(char *buf) {
+    int     i = 0;
+    while(buf[i]) i++;      i--;
+    while(buf[i] == ' ' || buf[i] == '\n') {
+        buf[i] = '\0';
+        i--;
+    }
+} 
+
 void loadFile(int tolnum) {
     FILE*   RFP;
     Book    book;
@@ -45,40 +54,28 @@ void loadFile(int tolnum) {
     RFP = fopen(oriFILE, "r+t");
 
     //while(!feof(RFP))
+
     for(int i = 0 ; i < 20 ; i++) {
     fgets(line, sizeof(line), RFP);
-    ptH = strtok(line, "\t"); lenSTR = strlen(ptH); book.TITLE  = (char*)malloc((lenSTR + 1) * 10); strcpy(book.TITLE  , ptH);
-    ptH = strtok(NULL, "\t"); lenSTR = strlen(ptH); book.AUTHOR = (char*)malloc((lenSTR + 1) * 10); strcpy(book.AUTHOR , ptH); 
-    ptH = strtok(NULL, "\t"); lenSTR = strlen(ptH); book.YEAR   = (char*)malloc((lenSTR + 1) * 10); strcpy(book.YEAR   , ptH);
-    ptH = strtok(NULL, "\t"); lenSTR = strlen(ptH); book.ISBN   = (char*)malloc((lenSTR + 1) * 10); strcpy(book.ISBN   , ptH);
+    ptH = strtok(line, "\t"); deleteEndString(ptH); lenSTR = strlen(ptH); book.TITLE  = (char*)malloc((lenSTR + 1) * 10); strcpy(book.TITLE  , ptH);
+    ptH = strtok(NULL, "\t"); deleteEndString(ptH); lenSTR = strlen(ptH); book.AUTHOR = (char*)malloc((lenSTR + 1) * 10); strcpy(book.AUTHOR , ptH); 
+    ptH = strtok(NULL, "\t"); deleteEndString(ptH); lenSTR = strlen(ptH); book.YEAR   = (char*)malloc((lenSTR + 1) * 10); strcpy(book.YEAR   , ptH);
+    ptH = strtok(NULL, "\n"); deleteEndString(ptH); lenSTR = strlen(ptH); book.ISBN   = (char*)malloc((lenSTR + 1) * 10); strcpy(book.ISBN   , ptH);
     
     //printf("%s\n%s\n%s\n%s\n", book.TITLE, book.AUTHOR, book.ISBN, book.YEAR);
     addNode(book);
     memset(line, 0, sizeof(line));
     }   
-    //printf("%s", ptH);
-    /*      TO LOAD ALL FILE       */ 
-    //while(!feof(RFP)) 
-    /*
-    for(int i = 0 ; i < 2 ; i++) {
-        fgets(line, sizeof(line), RFP);
-        //printf("%s\n", line);
-        ptH = strtok(line, "|");    book[curNum].TITLE  = ptH; 
-        ptH = strtok(NULL, "|");    book[curNum].AUTHOR = ptH;
-        ptH = strtok(NULL, "|");    book[curNum].ISBN   = ptH;
-        ptH = strtok(NULL, "|");    book[curNum].YEAR   = ptH;
-        curNum++;
-    } 
-    */
+
 /*
-    for(int i = 0 ; i < 2 ; i++) {
-        printf("%s \n", book[curnum].TITLE  = ptH);
-        printf("%s \n", book[curnum].AUTHOR = ptH);
-        printf("%s \n", book[curnum].ISBN   = ptH);
-        printf("%s \n", book[curnum].YEAR   = ptH);
-        curnum++;
-    } */
-    //printf("tol : %d\ncol : %d\n", tolnum, curnum);
+    for(int i = 0 ; i < 20 ; i++) {
+    fgets(line, sizeof(line), RFP);
+    ptH = strtok(line, "\t"); printf(" %s \n", ptH);
+    ptH = strtok(NULL, "\t"); printf(" %s \n", ptH); 
+    ptH = strtok(NULL, "\t"); printf(" %s \n", ptH); 
+    ptH = strtok(NULL, "\t"); printf(" %s \n", ptH); 
+    }   */
+
     fclose(RFP);
 }
 
@@ -99,7 +96,7 @@ void showAllInfo() {
 void showSingleInfo(Book *_book) {
     printf("책 제목\t\t%s\n", _book->TITLE);
     printf("책 저자\t\t%s\n", _book->AUTHOR);
-    printf("발행일자\t[%s]\n", _book->YEAR);
+    printf("발행일자\t%s\n", _book->YEAR);
     printf("ISBN 정보\t%s\n", _book->ISBN);
 }
 /*      노드 정보 삭제 함수        */
@@ -153,7 +150,7 @@ int main() {
     loadFile(dataNum); // 리드
     showAllInfo();
     searchNode();
-    freeAllNode();         // 죽여!
+    //freeAllNode();         // 죽여!
     
 }
 /*
