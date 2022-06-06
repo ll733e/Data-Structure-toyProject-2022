@@ -4,12 +4,8 @@
 #ifndef __IO_H__
 #define __IO_H__
 
-#if TEST
-#define     oriFILE     "../../../data/liblist.test"        // 원본파일
-#define     bakFILE     "../../../data/liblist.bak"       // 백업파일
-#else
-#define     oriFILE     "kkk.test"
-#endif
+
+#define     oriFILE     "../../data/book/book.dat"        // 원본파일
 
 typedef struct Book {
     char    *TITLE;     // 책 이름

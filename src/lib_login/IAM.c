@@ -1,10 +1,16 @@
 #include <stdio.h>
 #include <string.h>
-#include "parson.h"
-#include "IAM.h"
+#include "../lib_json/parson.h"
+
+void delUser(double ID); // 사용자 탈퇴 OR 사용자 자격 박탈
+void prtUser(); // 사용자 정보 출력 (대출 권수, 대출 목록)
+void logUser();			// 사용자 로그인 기능 함수
+unsigned int getUser(); // 사용자 정보 가져오기
+
 
 void addUser(double ID, double PW)
 {
+	
 	JSON_Value *rootValue = json_parse_file("userSample.json");
 	JSON_Object *rootObject = json_value_get_object(rootValue);
 
@@ -32,14 +38,14 @@ void addUser(double ID, double PW)
 	json_value_free(rootValue);
 }
 
-void delUser(double ID); // 사용자 탈퇴 OR 사용자 자격 박탈
+
 void delUser(double ID)
 {
 
 	JSON_Value *rootValue = json_parse_file("userSample.json");
 	JSON_Object *rootObject = json_value_get_object(rootValue);
 }
-void prtUser(); // 사용자 정보 출력 (대출 권수, 대출 목록)
+
 void prtUser()
 {
 
@@ -63,5 +69,8 @@ void prtUser()
 	json_value_free(rootValue);
 }
 /*          Indentification & Authentication        */
-void logUser();			// 사용자 로그인 기능 함수
-unsigned int getUser(); // 사용자 정보 가져오기
+
+
+int main () {
+	addUser(2021271, 14124523);
+}

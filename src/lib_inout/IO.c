@@ -10,6 +10,7 @@ int countFile() {
     int     tolnum = 0;
 
     RFP = fopen(oriFILE, "rt");
+    if(RFP == NULL) { puts("데이터 파일이 없습니다."); exit(1); }
     fgets(line, sizeof(line), RFP);
     tolnum = atoi(line);
     
@@ -52,6 +53,7 @@ void loadFile(int tolnum) {
     char    *str;
 
     RFP = fopen(oriFILE, "r+t");
+    if(RFP == NULL) { puts("데이터 파일이 없습니다."); exit(1); }
 
     //while(!feof(RFP))
 
