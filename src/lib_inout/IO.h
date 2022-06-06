@@ -8,10 +8,10 @@
 #define     oriFILE     "../../data/book/book.dat"        // 원본파일
 
 typedef struct Book {
-    char    *TITLE;     // 책 이름
-    char    *AUTHOR;    // 저자 이름
-    char    *ISBN;       // ISBN
-    char    *YEAR;       // 발행연도
+    char    TITLE[200];     // 책 이름
+    char    AUTHOR[500];    // 저자 이름
+    char    YEAR[20];       // 발행연도
+    char    ISBN[20];       // ISBN
 }   Book;
 
 typedef struct Node {
