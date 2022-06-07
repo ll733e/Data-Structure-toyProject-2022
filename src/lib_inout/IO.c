@@ -4,7 +4,8 @@
 #include "IO.h"
 #include "..//lib_type//types.h"
 
-static char* status = "대출가능";
+static char*    rentStat = "대출가능";
+static char*    resvStat = "예약가능";
 
 void addNode(Book _book) {
     Node*   curNode = (Node*)malloc(sizeof(Node));
@@ -24,7 +25,7 @@ void deleteEndString(char *buf) {
         buf[i] = '\0';
         i--;
     }
-} 
+}
 
 void loadFile(int tolnum) {
     FILE*   RFP;
@@ -61,7 +62,7 @@ void showAllInfo() {
         return;
     }
     while(curNode != NULL) {
-        printf("[%s] %s %s %s %s\n", status, curNode->book.TITLE,curNode->book.AUTHOR,curNode->book.ISBN,curNode->book.YEAR);
+        printf("[%s | %s] %s %s %s %s\n", rentStat, resvStat, curNode->book.TITLE,curNode->book.AUTHOR,curNode->book.ISBN,curNode->book.YEAR);
         curNode = curNode->pNext;
     }
     puts("");
@@ -108,7 +109,6 @@ void searchTitle() {
     printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
     return;
 }
-
 
 void searchall() {
     char    searchKey[256];
