@@ -4,6 +4,7 @@
 #include "IO.h"
 #include "..//lib_type//types.h"
 
+static char* status = "대출가능";
 
 int countFile() {
     FILE*   RFP;
@@ -52,12 +53,11 @@ void loadFile(int tolnum) {
     char    line[500];
     char    *s1, *s2, *s3, *s4;
 
-
     RFP = fopen(oriFILE, "r+t");
     if(RFP == NULL) { puts("데이터 파일이 없습니다."); exit(1); }
     //while(!feof(RFP))
 
-    for(int i = 0 ; i < 3845 ; i++) {
+    for(int i = 0 ; i < tolnum ; i++) {
         fgets(line, sizeof(line), RFP);
 
         s1 = strtok(line, "\t");    if(s1 == NULL) s1 = "\0";   else deleteEndString(s1);   strcpy(book.TITLE,  s1);
@@ -66,15 +66,14 @@ void loadFile(int tolnum) {
         s4 = strtok(NULL, "\n");    if(s4 == NULL) s4 = "\0";   else deleteEndString(s4);   strcpy(book.ISBN,   s4);
         //printf("%s\n%s\n%s\n%s\n\n", s1, s2, s3, s4);
         
-        strcpy(book.TITLE, s1);
+        strcpy(book.TITLE,  s1);
         strcpy(book.AUTHOR, s2);
-        strcpy(book.YEAR, s3);
-        strcpy(book.ISBN, s4);
+        strcpy(book.YEAR,   s3);
+        strcpy(book.ISBN,   s4);
 
         addNode(book);
         //printf("%s\n%s\n%s\n%s\n\n", book.TITLE, book.AUTHOR, book.YEAR, book.ISBN);
     }
-
     fclose(RFP);
 }
 
@@ -86,7 +85,7 @@ void showAllInfo() {
         return;
     }
     while(curNode != NULL) {
-        printf("%s\n", curNode->book.TITLE);
+        printf("[%s] %s\n", status, curNode->book.TITLE);
         curNode = curNode->pNext;
     }
     puts("");
@@ -98,16 +97,8 @@ void showSingleInfo(Book *_book) {
     printf("발행일자\t%s\n", _book->YEAR);
     printf("ISBN 정보\t%s\n", _book->ISBN);
 }
-/*      노드 정보 삭제 함수        */
-void freeNode(Book *_book) {
-    // 4개의 필드 모두 동적할당 했었으니 FREE로 동적할당 해지
-    if(_book->TITLE  != NULL)    free(_book->TITLE);
-    if(_book->AUTHOR != NULL)    free(_book->AUTHOR);
-    if(_book->ISBN   != NULL)    free(_book->ISBN);
-    if(_book->YEAR   != NULL)    free(_book->YEAR);
-}
 /*      노드 정보 전체 삭제 함수        */
-void freeAllNode() {
+void freeNodes() {
     Node    *curNode = pHead;       // 헤드를 현재 노드로 설정
     Node    *delNode = NULL;
 
@@ -129,23 +120,25 @@ void searchTitle() {
     scanf("%[^\n]s", searchKey);
 
     system("clear");
-    printf("\"%s\" 에 대한 검색 결과입니다.\n", searchKey);
+    puts("[ 자료구조론 8팀 라이브러리 검색 결과 ]");
     while(curNode != NULL) {
         if(strcmp(curNode->book.TITLE, searchKey) == 0) {
+            printf("\"%s\"에 대한 검색 결과입니다.\n", searchKey);
             showSingleInfo(&(curNode->book));
             return;
         }
         curNode = curNode->pNext;
     }
-    fflush(stdout);
+    printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
+    return;
 }
 
 int main() {
     //int     dataNum = countFile();
-    loadFile(10); // 리드
+    loadFile(3849); // 리드
     showAllInfo();
     searchTitle();
-    freeAllNode();         // 죽여!
+    freeNodes();    // wnrdj....
     
 }
 /*
