@@ -4,7 +4,6 @@
 #ifndef __IO_H__
 #define __IO_H__
 
-
 #define     oriFILE     "../../data/book/book.dat"        // 원본파일
 
 typedef struct Book {
@@ -22,7 +21,6 @@ typedef struct Node {
 Node*   pHead = NULL;
 Node*   pTail = NULL;
 
-int     countFile();       // 축척된 파일의 개수를 구하는 함수
 void    addNode();         // 노드를 추가합니다
 void    loadFile();        // 파일을 로드하는 함수
 void    showAllInfo();     // 모든 정보를 출력하는 함수
@@ -31,6 +29,5 @@ void    freeNode();        // 특정 노드 프리
 void    freeAllNode();     // 전체 노드 프리
 void    searchNode();      // 단순 겹치는 문자열 검색 기능 
 void    searchNodeKMP();   // KMP 알고리즘 문자열 검색 기능
-
 
 #endif  // __IO_H__

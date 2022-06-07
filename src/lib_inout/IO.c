@@ -6,25 +6,6 @@
 
 static char* status = "대출가능";
 
-int countFile() {
-    FILE*   RFP;
-    char    line[200];
-    int     tolnum = 0;
-
-    RFP = fopen(oriFILE, "rt");
-    if(RFP == NULL) { puts("데이터 파일이 없습니다."); exit(1); }
-    fgets(line, sizeof(line), RFP);
-    tolnum = atoi(line);
-    
-    while(!feof(RFP)) {
-        fgets(line, sizeof(line), RFP);
-        tolnum++;
-    }
-    fclose(RFP);
-
-    return tolnum;
-}
-
 void addNode(Book _book) {
     Node*   curNode = (Node*)malloc(sizeof(Node));
     curNode->book   = _book;
@@ -65,11 +46,6 @@ void loadFile(int tolnum) {
         s3 = strtok(NULL, "\t");    if(s3 == NULL) s3 = "\0";   else deleteEndString(s3);   strcpy(book.YEAR,   s3);
         s4 = strtok(NULL, "\n");    if(s4 == NULL) s4 = "\0";   else deleteEndString(s4);   strcpy(book.ISBN,   s4);
         //printf("%s\n%s\n%s\n%s\n\n", s1, s2, s3, s4);
-        
-        strcpy(book.TITLE,  s1);
-        strcpy(book.AUTHOR, s2);
-        strcpy(book.YEAR,   s3);
-        strcpy(book.ISBN,   s4);
 
         addNode(book);
         //printf("%s\n%s\n%s\n%s\n\n", book.TITLE, book.AUTHOR, book.YEAR, book.ISBN);
@@ -134,11 +110,10 @@ void searchTitle() {
 }
 
 int main() {
-    //int     dataNum = countFile();
-    loadFile(3849); // 리드
+    loadFile(3849); 
     showAllInfo();
     searchTitle();
-    freeNodes();    // wnrdj....
+    freeNodes();   
     
 }
 /*
