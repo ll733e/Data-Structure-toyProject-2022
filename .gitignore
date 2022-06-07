@@ -1,23 +1,38 @@
-# 실행 파일 제외
-*.dll
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+# MAC OS
+.DS_Store
+
+# Jupyter Notebook
+*/.ipynb_checkpoints
+.ipynb_checkpoints/
+
+# Colab
+for_commit_from_colab_to_github.ipynb
+
+# Package
+*.class
+*.jar
+*.war
+*.db
+*.ear
 *.exe
 *.o
-*.so
-*.com
-*.class
 
+# VS Code
+tasks.json
+c_cpp_properties.json
+launch.json
+settings.json
+.vscode
+*.dsYM
 
-# 패키지 파일 제외
-*.dmg
-*.iso
-*.tar
-*.zip
-*.gz
-
-# vscode
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
-src/lib_src/JSON/writeJSON
+# Code Runner
+tempCodeRunnerFile.c
