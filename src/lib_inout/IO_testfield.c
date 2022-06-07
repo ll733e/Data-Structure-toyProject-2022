@@ -68,6 +68,7 @@ void showAllInfo() {
 }
 
 void showSingleInfo(Book *_book) {
+    puts("");
     printf("책 제목\t\t%s\n",   _book->TITLE);
     printf("책 저자\t\t%s\n",   _book->AUTHOR);
     printf("발행일자\t%s\n",     _book->YEAR);
@@ -91,50 +92,23 @@ void searchTitle() {
     char    searchKey[256];
     Node    *curNode = pHead;
     memset(searchKey, 0, sizeof(searchKey));
-
-    //FILE *fp = fopen("result.txt","w");
     
-    FILE*   RFP;
-    RFP = fopen(oriFILE, "r+t");
-    if(RFP == NULL) { puts("데이터 파일이 없습니다."); exit(1); }
-
-    int test_cnt = 0;
     printf("검색할 단어를 입력하세요 >> ");
     scanf("%[^\n]s", searchKey);
 
-    char *s1;
-    system("clear");
     puts("[ 자료구조론 8팀 라이브러리 검색 결과 ]");
-    printf("\"%s\"에 대한 검색 결과입니다.\n", searchKey);
-    
     while(curNode != NULL) {
-        //int     lenSTR;             // 길이 카운터의 버퍼 길이
-        char    line[500];
-        fseek(RFP,0,SEEK_SET);
-        while(!feof(RFP)) {
-            fgets(line, sizeof(line), RFP);
-            s1 = strtok(line, "\t ");
-            while (s1 != NULL) {
-                if(strcmp(s1,searchKey) == 0) {
-                    test_cnt++;
-                    //fprintf(fp,"%d. \"%s\"에 대한 검색 결과입니다.\n", test_cnt,searchKey);
-                    //fprintf(fp,"%s\n%s\n%s\n%s\n", curNode->book.TITLE,curNode->book.AUTHOR,curNode->book.ISBN,curNode->book.YEAR);
-                    showSingleInfo(&(curNode->book));
-                    //return;
-                }
-                s1 = strtok(NULL, " "); 
-            }
-            curNode = curNode->pNext;
+        if(strcmp(curNode->book.TITLE, searchKey) == 0) {
+            printf("\"%s\"에 대한 검색 결과입니다.\n", searchKey);
+            showSingleInfo(&(curNode->book));
+            return;
         }
-        printf("%d\n",test_cnt);
-        if(test_cnt == 0) {
-            printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
-        }
+        curNode = curNode->pNext;
     }
-    fclose(RFP);
-    //fclose(fp);
+    printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
     return;
 }
+
 
 void searchall() {
     char    searchKey[256];
@@ -148,7 +122,7 @@ void searchall() {
     if(RFP == NULL) { puts("데이터 파일이 없습니다."); exit(1); }
     
     char *title,*author,*isbn,*year;
-    int test_cnt = 0;
+    int searchNum = 0;
 
     printf("검색할 단어를 입력하세요 >> ");
     scanf("%[^\n]s", searchKey);
@@ -159,10 +133,10 @@ void searchall() {
     printf("\"%s\"에 대한 검색 결과입니다.\n", searchKey);
     //fprintf(fp,"\"%s\"에 대한 검색 결과입니다.\n", searchKey);
 
-    title = malloc(sizeof(curNode->book.TITLE));
-    author = malloc(sizeof(curNode->book.AUTHOR));
-    isbn = malloc(sizeof(curNode->book.ISBN));
-    year = malloc(sizeof(curNode->book.YEAR));
+    title   = malloc(sizeof(curNode->book.TITLE));
+    author  = malloc(sizeof(curNode->book.AUTHOR));
+    isbn    = malloc(sizeof(curNode->book.ISBN));
+    year    = malloc(sizeof(curNode->book.YEAR));
     strncpy(title,curNode->book.TITLE,sizeof(curNode->book.TITLE));
     strncpy(author,curNode->book.AUTHOR,sizeof(curNode->book.AUTHOR));
     strncpy(isbn,curNode->book.ISBN,sizeof(curNode->book.ISBN));
@@ -177,19 +151,20 @@ void searchall() {
             fgets(line, sizeof(line), RFP);
             //s1 = NULL;
             s1 = strtok(line, ",\t ");
-            while (s1 != "\0") {
+            //while (s1 != "\0") {
+            while(strcmp(s1, "\0") != 0) {
                 if(strcmp(s1, searchKey) == 0) {
-                    if(strcmp(curNode->book.TITLE, title) == 0 && strcmp(curNode->book.AUTHOR, author) == 0 && strcmp(curNode->book.ISBN, isbn) == 0 && strcmp(curNode->book.YEAR, year) == 0){
+                    if(strcmp(curNode->book.TITLE, title) == 0 && strcmp(curNode->book.AUTHOR, author) == 0 && strcmp(curNode->book.ISBN, isbn) == 0 && strcmp(curNode->book.YEAR, year) == 0) {
                         s1 = strtok(NULL, ",\t "); if(s1 == NULL) s1 = "\0"; else deleteEndString(s1);
                         continue;
                     }
-                    else{
-                        test_cnt++;
+                    else {
+                        searchNum++;
                         strncpy(title,curNode->book.TITLE,sizeof(curNode->book.TITLE));
                         strncpy(author,curNode->book.AUTHOR,sizeof(curNode->book.AUTHOR));
                         strncpy(isbn,curNode->book.ISBN,sizeof(curNode->book.ISBN));
                         strncpy(year,curNode->book.YEAR,sizeof(curNode->book.YEAR));
-                        //fprintf(fp,"%d. \"%s\"에 대한 검색 결과입니다.\n", test_cnt,searchKey);
+                        //fprintf(fp,"%d. \"%s\"에 대한 검색 결과입니다.\n", searchNum,searchKey);
                         //fprintf(fp,"%s\n%s\n%s\n%s\n", curNode->book.TITLE,curNode->book.AUTHOR,curNode->book.ISBN,curNode->book.YEAR);
                         showSingleInfo(&(curNode->book));
                     }
@@ -202,37 +177,27 @@ void searchall() {
                 break;
             }
         }
-        if(test_cnt == 0) {
-            printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
+        if(searchNum == 0) {
+            curNode = pHead;
+            while(curNode != NULL) {
+            if(strcmp(curNode->book.TITLE, searchKey) == 0) {
+                //printf("\"%s\"에 대한 검색 결과입니다.\n", searchKey);
+                showSingleInfo(&(curNode->book));
+                return;
+            }
+            curNode = curNode->pNext;
+    }
+    printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
+    return;
+            //printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
         }
     }
-    printf("%d\n",test_cnt);
+    printf("\n%d개의 검색 결과가 있습니다.\n", searchNum);
     fclose(RFP);
     //fclose(fp);
-    free(title); free(author); free(isbn); free(year);
+    free(title);    free(author);   free(isbn);     free(year);
     return;
 }
-
-/*
-int levenshtein(char *s1, char *s2) {
-    unsigned int s1len, s2len, x, y, lastdiag, olddiag;
-    s1len = strlen(s1);
-    s2len = strlen(s2);
-    unsigned int column[s1len + 1];
-    for (y = 1; y <= s1len; y++)
-        column[y] = y;
-    for (x = 1; x <= s2len; x++)
-    {
-        column[0] = x;
-        for (y = 1, lastdiag = x - 1; y <= s1len; y++)
-        {
-            olddiag = column[y];
-            column[y] = MIN3(column[y] + 1, column[y - 1] + 1, lastdiag + (s1[y - 1] == s2[x - 1] ? 0 : 1));
-            lastdiag = olddiag;
-        }
-    }
-    return column[s1len];
-} */
 
 int main() {
     loadFile(3849); 
@@ -254,16 +219,22 @@ https://stackoverflow.com/questions/8370468/debugging-segmentation-faults-on-a-m
 */
 
 /*
-
-    for(int i = 0 ; i < 21 ; i++) {
-    fgets(line, sizeof(line), RFP);
-    ptH = strtok(line, "\t"); deleteEndString(ptH); lenSTR = strlen(ptH); book.TITLE  = (char*)malloc((lenSTR + 1) * 10); strcpy(book.TITLE  , ptH);
-    ptH = strtok(NULL, "\t"); deleteEndString(ptH); lenSTR = strlen(ptH); book.AUTHOR = (char*)malloc((lenSTR + 1) * 10); strcpy(book.AUTHOR , ptH); 
-    ptH = strtok(NULL, "\t"); deleteEndString(ptH); lenSTR = strlen(ptH); book.YEAR   = (char*)malloc((lenSTR + 1) * 10); strcpy(book.YEAR   , ptH);
-    ptH = strtok(NULL, "\n"); deleteEndString(ptH); lenSTR = strlen(ptH); book.ISBN   = (char*)malloc((lenSTR + 1) * 10); strcpy(book.ISBN   , ptH);
-    
-    //printf("%s\n%s\n%s\n%s\n", book.TITLE, book.AUTHOR, book.ISBN, book.YEAR);
-    addNode(book);
-    memset(line, 0, sizeof(line));
-    }   
-    */
+int levenshtein(char *s1, char *s2) {
+    unsigned int s1len, s2len, x, y, lastdiag, olddiag;
+    s1len = strlen(s1);
+    s2len = strlen(s2);
+    unsigned int column[s1len + 1];
+    for (y = 1; y <= s1len; y++)
+        column[y] = y;
+    for (x = 1; x <= s2len; x++)
+    {
+        column[0] = x;
+        for (y = 1, lastdiag = x - 1; y <= s1len; y++)
+        {
+            olddiag = column[y];
+            column[y] = MIN3(column[y] + 1, column[y - 1] + 1, lastdiag + (s1[y - 1] == s2[x - 1] ? 0 : 1));
+            lastdiag = olddiag;
+        }
+    }
+    return column[s1len];
+} */
