@@ -30,6 +30,9 @@ for_commit_from_colab_to_github.ipynb
 tasks.json
 c_cpp_properties.json
 launch.json
+settings.json
+.vscode
+*.dsYM
 
-
-
+# Code Runner
+tempCodeRunnerFile.c

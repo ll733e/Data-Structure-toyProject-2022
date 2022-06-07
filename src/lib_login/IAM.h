@@ -15,4 +15,3 @@ void            logUser();      // 사용자 로그인 기능 함수
 unsigned int    getUser();      // 사용자 정보 가져오기
 
 #endif  // _IAM_H__
-
