@@ -112,31 +112,7 @@ void searchTitle() {
 int main() {
     loadFile(3849); 
     showAllInfo();
-    searchTitle();
+    //searchTitle();
     freeNodes();   
     
 }
-/*
-https://stackoverflow.com/questions/8370468/debugging-segmentation-faults-on-a-mac
-해야할 것
-1. 21번째 메모리 덤프 원인 알아내기
-2. 검색 알고리즘 강화 KMP
-3. ISBN 자르고 검색 기능(?)
-4. 사용자 JSON만들고 대출 여부 만들기
-5. 도서 예약
-*/
-
-
-/*
-    for(int i = 0 ; i < 21 ; i++) {
-    fgets(line, sizeof(line), RFP);
-    ptH = strtok(line, "\t"); deleteEndString(ptH); lenSTR = strlen(ptH); book.TITLE  = (char*)malloc((lenSTR + 1) * 10); strcpy(book.TITLE  , ptH);
-    ptH = strtok(NULL, "\t"); deleteEndString(ptH); lenSTR = strlen(ptH); book.AUTHOR = (char*)malloc((lenSTR + 1) * 10); strcpy(book.AUTHOR , ptH); 
-    ptH = strtok(NULL, "\t"); deleteEndString(ptH); lenSTR = strlen(ptH); book.YEAR   = (char*)malloc((lenSTR + 1) * 10); strcpy(book.YEAR   , ptH);
-    ptH = strtok(NULL, "\n"); deleteEndString(ptH); lenSTR = strlen(ptH); book.ISBN   = (char*)malloc((lenSTR + 1) * 10); strcpy(book.ISBN   , ptH);
-    
-    //printf("%s\n%s\n%s\n%s\n", book.TITLE, book.AUTHOR, book.ISBN, book.YEAR);
-    addNode(book);
-    memset(line, 0, sizeof(line));
-    }   
-    */

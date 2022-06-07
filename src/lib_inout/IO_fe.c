@@ -41,10 +41,10 @@ void loadFile(int tolnum) {
     for(int i = 0 ; i < tolnum ; i++) {
         fgets(line, sizeof(line), RFP);
 
-        s1 = strtok(line, "\t");    if(s1 == NULL) s1 = "\0";   else deleteEndString(s1);//   strcpy(book.TITLE,  s1);
-        s2 = strtok(NULL, "\t");    if(s2 == NULL) s2 = "\0";   else deleteEndString(s2);//   strcpy(book.AUTHOR, s2);
-        s3 = strtok(NULL, "\t");    if(s3 == NULL) s3 = "\0";   else deleteEndString(s3);//   strcpy(book.YEAR,   s3);
-        s4 = strtok(NULL, "\n");    if(s4 == NULL) s4 = "\0";   else deleteEndString(s4);//   strcpy(book.ISBN,   s4);
+        s1 = strtok(line, "\t");    if(s1 == NULL) s1 = "\0";   else deleteEndString(s1);  strcpy(book.TITLE,  s1);
+        s2 = strtok(NULL, "\t");    if(s2 == NULL) s2 = "\0";   else deleteEndString(s2);  strcpy(book.AUTHOR, s2);
+        s3 = strtok(NULL, "\t");    if(s3 == NULL) s3 = "\0";   else deleteEndString(s3);  strcpy(book.YEAR,   s3);
+        s4 = strtok(NULL, "\n");    if(s4 == NULL) s4 = "\0";   else deleteEndString(s4);  strcpy(book.ISBN,   s4);
         //printf("%s\n%s\n%s\n%s\n\n", s1, s2, s3, s4);
         
         addNode(book);
