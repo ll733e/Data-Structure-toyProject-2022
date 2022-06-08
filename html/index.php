@@ -1,15 +1,22 @@
 <HTML>
 <?php include_once("./inc/head.php"); ?>
     <body>
+		<?php include_once("./inc/header.php"); ?>
 		<div class="container">
 			<br>
 			<br>
 			<br>
-			<br>
 <?php
-include_once("./inc/header.php");
 if($_GET["p"] == "login")
 {
+	if(isset($_SESSION["ID"]))
+	{
+		echo("Already Logged In!");
+	}
+	else
+	{
+
+	}
 ?>
 <script src="inc/js/login.js"></script>
 	<div class="col-md-5">
@@ -26,9 +33,7 @@ if($_GET["p"] == "login")
 else if($_GET["p"] == "logout")
 {
 	session_destroy();
-?>
-	<script>location.href = "/";</script>
-<?php
+	echo('<script>location.href = "/";</script>');
 }
 else if($_GET["p"] == "search")
 {
@@ -80,7 +85,6 @@ else if($_GET["p"] == "search")
 				</div>
 			</td>
 		</tr>
-<!-- Adasd -->
 	</tbody>
 </table>
 <?php

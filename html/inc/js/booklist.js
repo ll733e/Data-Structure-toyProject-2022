@@ -13,7 +13,7 @@ function search_book()
             for(var row of res.result)
             {
                 console.log(row);
-                booklist.innerHTML += "<tr><td><div>" + row.text + "</div></td></tr>";
+                booklist.innerHTML += '<tr><td><div class="container"><a href="?p=book&isbn=' + row.isbn + '">' + row.bookTitle + '</a><p>' + row.author + ' / ' + row.publisher + ' / ' + row.year + '</p></div></td></tr>';
             }
         }
         else booklist.innerHTML = "<div><p>There is no result!</p></div>";

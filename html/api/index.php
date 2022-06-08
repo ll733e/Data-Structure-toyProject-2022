@@ -99,6 +99,6 @@ else if($_POST["type"] == "return")
 }
 else
 {
-
+    echo("404");
 }
 ?>
