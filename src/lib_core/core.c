@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "IO.h"
+#include "core.h"
 #include "..//lib_type//types.h"
 
 static char*    rentStat = "대출가능";
@@ -113,9 +113,7 @@ void searchall(char *searchKey) {
     //char    searchKey[256];
     Node    *curNode = pHead;
     //memset(searchKey, 0, sizeof(searchKey));
-
     //FILE *fp = fopen("result.txt","w");
-    
     FILE*   RFP;
     RFP = fopen(oriFILE, "r+t");
     if(RFP == NULL) { puts("데이터 파일이 없습니다."); exit(1); }

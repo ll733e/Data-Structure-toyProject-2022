@@ -1,28 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "IO.h"
-#include "..//lib_type//types.h"
-
-
-int countFile() {
-    FILE*   RFP;
-    char    line[200];
-    int     tolnum = 0;
-
-    RFP = fopen(oriFILE, "rt");
-    if(RFP == NULL) { puts("데이터 파일이 없습니다."); exit(1); }
-    fgets(line, sizeof(line), RFP);
-    tolnum = atoi(line);
-    
-    while(!feof(RFP)) {
-        fgets(line, sizeof(line), RFP);
-        tolnum++;
-    }
-    fclose(RFP);
-
-    return tolnum;
-}
+#include "..//..//src//lib_core//core.h"
 
 void deleteEndString(char *buf) {
     int     i = 0;
@@ -63,8 +42,7 @@ void loadFile(int tolnum) {
 }
 
 int main() {
-    int     dataNum = countFile();
-    loadFile(dataNum); // 리드
+    loadFile(100); // 리드
     //freeAllNode();         // 죽여!
     
 }
