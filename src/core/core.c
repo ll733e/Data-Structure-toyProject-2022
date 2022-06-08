@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include "core.h"
-#include "..//lib_type//types.h"
 
 static char*    rentStat = "대출가능";
 static char*    resvStat = "예약가능";
@@ -192,9 +191,45 @@ void searchall(char *searchKey) {
     return;
 }
 
+void searchISBN(char *searchKey) {
+    Node    *curNode = pHead;
+
+    while(curNode != NULL) {
+        if(strcmp(curNode->book.ISBN, searchKey) == 0) {
+            printf("\"%s\"에 대한 검색 결과입니다.\n", searchKey);
+            showSingleInfo(&(curNode->book));
+        }
+        curNode = curNode->pNext;
+    }
+    return;
+}
+
+
+void addUser(char *ID, char *HASH, int rtNum, int rvNum) {
+    FILE    *WFP;
+    char    buf[256];
+    char    ISBN[256];
+    Node    *curNode = pHead;
+
+    sprintf(buf, "%s%s%s", USERDIR, ID, FORMAT);
+
+    WFP = fopen(buf, "w+t");
+
+    fprintf(WFP, "%s\n", ID);
+    fprintf(WFP, "%s\n", HASH);
+
+    //for(int i = 0 ; i < rtNum ; i++) {
+   //     fprintf(WFP, "%s\t", ISBN);
+   // }
+    fclose(WFP);
+
+    //searchISBN("978-89-374-0917-2");
+}
+
 int main(int argc, char* argv[]) {
     loadFile(3849);
-    if(argc == 1)           showAllInfo();
-    else if(argc == 2)      searchall(argv[1]);    
+    addUser("2021270131", "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59", 3, 10);
+    //if(argc == 1)           showAllInfo();
+    //else if(argc == 2)      searchall(argv[1]);   
     freeNodes();       
 }
