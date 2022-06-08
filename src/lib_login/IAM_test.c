@@ -120,7 +120,7 @@ void rent(int cmd, int ID, char bookname[128]) {
 
 int main () {
    	addUser(2021272, 14124523);
-	rent(1, 2021272, "Fuck!!");
-	rent(1, 2021272, "Fuck2!!");
-	rent(2, 2021272, "Fuck!!");
+	rent(1, 2021272, "test!!");
+	rent(1, 2021272, "test2!!");
+	rent(2, 2021272, "test!!");
 }
