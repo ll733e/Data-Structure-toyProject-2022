@@ -102,7 +102,6 @@ void searchTitle() {
         if(strcmp(curNode->book.TITLE, searchKey) == 0) {
             printf("\"%s\"에 대한 검색 결과입니다.\n", searchKey);
             showSingleInfo(&(curNode->book));
-            return;
         }
         curNode = curNode->pNext;
     }
@@ -110,10 +109,10 @@ void searchTitle() {
     return;
 }
 
-void searchall() {
-    char    searchKey[256];
+void searchall(char *searchKey) {
+    //char    searchKey[256];
     Node    *curNode = pHead;
-    memset(searchKey, 0, sizeof(searchKey));
+    //memset(searchKey, 0, sizeof(searchKey));
 
     //FILE *fp = fopen("result.txt","w");
     
@@ -124,11 +123,10 @@ void searchall() {
     char *title,*author,*isbn,*year;
     int searchNum = 0;
 
-    printf("검색할 단어를 입력하세요 >> ");
-    scanf("%[^\n]s", searchKey);
+    //printf("검색할 단어를 입력하세요 >> ");
+    //scanf("%[^\n]s", searchKey);
 
     char *s1;
-    system("clear");
     puts("[ 자료구조론 8팀 라이브러리 검색 결과 ]");
     printf("\"%s\"에 대한 검색 결과입니다.\n", searchKey);
     //fprintf(fp,"\"%s\"에 대한 검색 결과입니다.\n", searchKey);
@@ -137,10 +135,10 @@ void searchall() {
     author  = malloc(sizeof(curNode->book.AUTHOR));
     isbn    = malloc(sizeof(curNode->book.ISBN));
     year    = malloc(sizeof(curNode->book.YEAR));
-    strncpy(title,curNode->book.TITLE,sizeof(curNode->book.TITLE));
-    strncpy(author,curNode->book.AUTHOR,sizeof(curNode->book.AUTHOR));
-    strncpy(isbn,curNode->book.ISBN,sizeof(curNode->book.ISBN));
-    strncpy(year,curNode->book.YEAR,sizeof(curNode->book.YEAR));
+    strncpy(title,curNode->book.TITLE,   sizeof(curNode->book.TITLE));
+    strncpy(author,curNode->book.AUTHOR, sizeof(curNode->book.AUTHOR));
+    strncpy(isbn,curNode->book.ISBN,     sizeof(curNode->book.ISBN));
+    strncpy(year,curNode->book.YEAR,     sizeof(curNode->book.YEAR));
 
     while(curNode != NULL) {
         //int     lenSTR;             // 길이 카운터의 버퍼 길이
@@ -149,9 +147,7 @@ void searchall() {
 
         while(!feof(RFP)) {
             fgets(line, sizeof(line), RFP);
-            //s1 = NULL;
             s1 = strtok(line, ",\t ");
-            //while (s1 != "\0") {
             while(strcmp(s1, "\0") != 0) {
                 if(strcmp(s1, searchKey) == 0) {
                     if(strcmp(curNode->book.TITLE, title) == 0 && strcmp(curNode->book.AUTHOR, author) == 0 && strcmp(curNode->book.ISBN, isbn) == 0 && strcmp(curNode->book.YEAR, year) == 0) {
@@ -160,15 +156,14 @@ void searchall() {
                     }
                     else {
                         searchNum++;
-                        strncpy(title,curNode->book.TITLE,sizeof(curNode->book.TITLE));
-                        strncpy(author,curNode->book.AUTHOR,sizeof(curNode->book.AUTHOR));
-                        strncpy(isbn,curNode->book.ISBN,sizeof(curNode->book.ISBN));
-                        strncpy(year,curNode->book.YEAR,sizeof(curNode->book.YEAR));
+                        strncpy(title,curNode->book.TITLE,   sizeof(curNode->book.TITLE));
+                        strncpy(author,curNode->book.AUTHOR, sizeof(curNode->book.AUTHOR));
+                        strncpy(isbn,curNode->book.ISBN,     sizeof(curNode->book.ISBN));
+                        strncpy(year,curNode->book.YEAR,     sizeof(curNode->book.YEAR));
                         //fprintf(fp,"%d. \"%s\"에 대한 검색 결과입니다.\n", searchNum,searchKey);
                         //fprintf(fp,"%s\n%s\n%s\n%s\n", curNode->book.TITLE,curNode->book.AUTHOR,curNode->book.ISBN,curNode->book.YEAR);
                         showSingleInfo(&(curNode->book));
                     }
-                    //return;
                 }
                 s1 = strtok(NULL, ",\t "); if(s1 == NULL) s1 = "\0"; else deleteEndString(s1);
             }
@@ -199,9 +194,9 @@ void searchall() {
     return;
 }
 
-int main() {
-    loadFile(3849); 
-    showAllInfo();
-    searchall();
+int main(int argc, char* argv[]) {
+    loadFile(3849);
+    if(argc == 1)           showAllInfo();
+    else if(argc == 2)      searchall(argv[1]);    
     freeNodes();       
 }
