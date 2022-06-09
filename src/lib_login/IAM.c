@@ -4,7 +4,7 @@
 
 void delUser(double ID); // 사용자 탈퇴 OR 사용자 자격 박탈
 void prtUser(); // 사용자 정보 출력 (대출 권수, 대출 목록)
-void logUser();			// 사용자 로그인 기능 함수
+//void logUser();			// 사용자 로그인 기능 함수
 unsigned int getUser(); // 사용자 정보 가져오기
 
 
@@ -52,12 +52,8 @@ void prtUser()
 	JSON_Value *rootValue = json_parse_file("userSample.json");
 	JSON_Object *rootObject = json_value_get_object(rootValue);
 
-	json_object_get_value(rootObject, "rent");
-	JSON_Array *rent = json_object_get_array(rootObject, "rent");
-	json_object_get_value(rootObject, "waiting");
-	JSON_Array *waiting = json_object_get_array(rootObject, "waiting");
-	json_array_append_string(rent, "book1");
-	json_array_append_string(waiting, "wait_book1");
+	printf("rent: %s\n", json_object_get_string(rootObject, "rent"));
+	printf("waiting: %s\n", json_object_get_string(rootObject, "waiting"));
 
 	double Id = json_object_get_number(rootObject, "ID");
 	double Pw = json_object_get_number(rootObject, "hash");
@@ -65,11 +61,29 @@ void prtUser()
 	printf("ID : %lf\n", Id);
 	printf("Pw : %lf\n", Pw);
 
+	
+
 	json_serialize_to_file_pretty(rootValue, "userSample.json");
 	json_value_free(rootValue);
 }
 /*          Indentification & Authentication        */
 
+void logUser(){
+	double userID = 0;
+	double userPW = 0;
+
+	JSON_Value *rootValue = json_parse_file("userSample.json");
+	JSON_Object *rootObject = json_value_get_object(rootValue);
+
+	double Id = json_object_get_number(rootObject, "ID");
+	double Pw = json_object_get_number(rootObject, "hash");
+
+	if(userID == Id){
+		if(userPW == Pw){
+			login
+		}
+	}
+}
 
 int main () {
 	addUser(2021271, 14124523);
