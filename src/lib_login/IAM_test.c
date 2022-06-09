@@ -200,6 +200,7 @@ void rent(int cmd, int ID, char bookname[128]) {
 int main () {
 	initialization();
    	addUser(2021272, 14124523);
+<<<<<<< HEAD
 	addUser(2021273, 14124523);
 	//addUser(2021274, 14124523);
 	//delUser(2021272);
@@ -207,3 +208,9 @@ int main () {
 	rent(1, 2021273, "test_book2!!");
 	rent(2, 2021272, "test_book!!");
 }
+=======
+	rent(1, 2021272, "test!!");
+	rent(1, 2021272, "test2!!");
+	rent(2, 2021272, "test!!");
+}
+>>>>>>> 0a7482aca194ac7182f2422a147dd752db47cb96
