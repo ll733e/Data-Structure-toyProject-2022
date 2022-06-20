@@ -18,11 +18,12 @@ function getBook(isbn)
         else if(res.res == 2)
         {
             alert("해당 도서를 찾을 수 없습니다.");
-            document.href="/";
+            location.href="/";
         }
         else
         {
             alert(res.msg);
+            location.href="/";
         }
     }
 

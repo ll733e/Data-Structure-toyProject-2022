@@ -15,3 +15,8 @@ function reqRent(isbn)
 
     post.send(data);
 }
+
+function reqReturn(isbn)
+{
+    
+}

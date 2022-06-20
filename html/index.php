@@ -12,13 +12,12 @@ if($_GET["p"] == "login")
 	if(isset($_SESSION["ID"]))
 	{
 		echo("Already Logged In!");
+		echo('<script>location.href="/";</script>');
 	}
 	else
 	{
-
-	}
 ?>
-<script src="inc/js/login.js"></script>
+	<script src="inc/js/login.js"></script>
 	<div class="col-md-5">
 		<form id="login_form" class="form-signin" onsubmit="return do_login()">
 			<h2 class="form-signin-heading">로그인</h2>
@@ -29,6 +28,7 @@ if($_GET["p"] == "login")
 		</form>
 	</div>
 <?php
+	}
 }
 else if($_GET["p"] == "logout")
 {
@@ -64,7 +64,6 @@ else if($_GET["p"] == "search")
 		<tr>
 			<td>
 				<div>
-
 				</div>
 			</td>
 		</tr>
@@ -75,8 +74,8 @@ else if($_GET["p"] == "search")
 else if($_GET["p"] == "book" && isset($_GET["isbn"]))
 {
 ?>
-<script src="inc/js/book.js"></script>
-<form id="curform" onload="getBook(<?php echo(htmlspecialchars($_GET['isbn'])); ?>)">
+<script onload="getBook('<?php echo(htmlspecialchars($_GET['isbn'])); ?>');" src="inc/js/book.js"></script>
+<form id="curform">
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-10">
