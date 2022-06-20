@@ -204,32 +204,65 @@ void searchISBN(char *searchKey) {
     return;
 }
 
-
 void addUser(char *ID, char *HASH, int rtNum, int rvNum) {
     FILE    *WFP;
     char    buf[256];
-    char    ISBN[256];
-    Node    *curNode = pHead;
-
+    Book    book[20];
     sprintf(buf, "%s%s%s", USERDIR, ID, FORMAT);
 
     WFP = fopen(buf, "w+t");
 
     fprintf(WFP, "%s\n", ID);
     fprintf(WFP, "%s\n", HASH);
+    fprintf(WFP, "%d\n", rtNum);
+    fprintf(WFP, "%d\n", rvNum); // 목록 넣어보기
 
-    //for(int i = 0 ; i < rtNum ; i++) {
-   //     fprintf(WFP, "%s\t", ISBN);
-   // }
     fclose(WFP);
+}
 
-    //searchISBN("978-89-374-0917-2");
+int  logRespone(char *ID, char *HS) {
+    FILE    *RFP;
+    char    buf[256];
+    char    getID[11];
+    char    getHS[66];
+    char    *ptel;
+    //int     rtNum, rvNum;
+
+    sprintf(buf, "%s%s%s", USERDIR, ID, FORMAT);
+    RFP = fopen(buf, "r+t");
+    if(RFP == NULL)     return 2;
+    
+    memset(buf, 0, sizeof(buf));
+    fgets(buf, sizeof(buf), RFP);       ptel  = strtok(buf, "\n");    strncpy(getID, ptel, 10);
+    fgets(buf, sizeof(buf), RFP);       ptel  = strtok(buf, "\n");    strncpy(getHS, buf, 65);
+    //fgets(buf, sizeof(buf), RFP);       rtNum = atoi(buf);
+    //fgets(buf, sizeof(buf), RFP);       rvNum = atoi(buf);
+    fclose(RFP);
+    if(strncmp(HS, getHS, 65 * sizeof(char)) != 0) { /* puts("[오류] 패스워드가 다릅니다!"); */ return -1; }
+    else    return 1;
+    //printf("ID [%s]\tHS [%s]\nrtN [%d]\trvN [%d]\n", getID, getHS, rtNum, rvNum);
+    return -1;
+}
+
+void logRequest(char *ID, char *HS) {
+    int     res = logRespone(ID, HS);
+    if(res == 1)       { puts("로그인 성공!"); }
+    else if(res == 2)  { puts("찾을 수 없는 계정입니다. 새로 파일을 만듭니다. 초기 비밀번호는 \"test\"입니다."); addUser(ID, TESTHASH, 0, 0); }
+    else if(res == -1) { puts("패스워드가 틀렸습니다!"); }
+    else               { puts("알 수 없는 오류입니다. 관리자에게 문의하세요."); }
 }
 
 int main(int argc, char* argv[]) {
+    logRequest("2021270131", "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59");
+    /*
     loadFile(3849);
-    addUser("2021270131", "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59", 3, 10);
+    //addUser("2021270131", "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59", 3, 10);
     //if(argc == 1)           showAllInfo();
-    //else if(argc == 2)      searchall(argv[1]);   
-    freeNodes();       
+    //else if(argc == 2)      searchall(argv[1]);  
+    char buf[256];
+    for(int i = 1 ; i < 40 ; i++) {
+        sprintf(buf, "%s%02d", "20213000",i);
+        addUser(buf, "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59", 3, 10);
+    } 
+    freeNodes();       */
 }

@@ -36,3 +36,5 @@ settings.json
 
 # Code Runner
 tempCodeRunnerFile.c
+
+*.user
