@@ -20,7 +20,7 @@ int tcpListen(int argc, char* argv[]) {
     memset(&serv_addr, 0, sizeof(serv_addr)); 
     serv_addr.sin_family        = AF_INET;
     serv_addr.sin_addr.s_addr   = htonl(INADDR_ANY);
-    serv_addr.sin_port          = htons(atoi(8888));
+    serv_addr.sin_port          = htons(atoi("8080"));
     
     if(bind(serv_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) puts("Bind Error");
     if(listen(serv_sock, 5) == -1) puts("Listen Error");
@@ -43,7 +43,7 @@ int tcpListen(int argc, char* argv[]) {
 
         memset(buf, 0, sizeof(buf));
         memset(res, 0, sizeof(res));
-        
+
         buf_len = read(serv_sock, buf, sizeof(buf)-1);
         if(buf_len == -1) puts("Read Error");
 
@@ -57,6 +57,7 @@ int tcpListen(int argc, char* argv[]) {
             case 5: BookList(res, res_len, json_object_get_string(rootObj, "query"), (int)json_object_get_number(rootObj, "limit"), (int)json_object_get_number(rootObj, "page")); break; //It's Book List Request
             case 7: Rental(res, res_len, json_object_get_string(rootObj, "isbn"), json_object_get_string(rootObj, "id")); break; //It's Book rental Request
             case 9: Return(res, res_len, json_object_get_string(rootObj, "isbn"), json_object_get_string(rootObj, "id")); break; //It's Book return Request
+            default: strcpy(res, "{\"res\":-1,\"msg\":\"Unknown Request\"}"); res_len = strlen(res);
         }
         json_value_free(rootVal);
 
