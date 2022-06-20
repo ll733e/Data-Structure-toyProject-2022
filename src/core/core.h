@@ -9,7 +9,7 @@
 #define     oriFILE    "../../data/book/book.dat"        // 원본파일
 #define     USERDIR    "..//..//data//user//"
 #define     RTFILE     "..//..//data//book//rented.dat"
-#define     RVFILE     "..//..//data//book//reserv.dat"
+#define     RBFILE     "..//..//data//book//rentBUF.dat"
 #define     FORMAT     ".user"
 #define     TESTHASH   "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
 
