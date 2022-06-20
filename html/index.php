@@ -42,7 +42,7 @@ else if($_GET["p"] == "search")
 <script src="inc/js/rental.js"></script>
 <div class="row">
 	<div class="col-md-10">
-		<form onsubmit="return search_book()" onload="default_book()" id="search_form">
+		<form onsubmit="return search_book(1)" onload="default_book()" id="search_form">
 			<div class="row">
 				<div class="col">
 					<input type="text" class="form-control" id="q" placeholder="Search">
@@ -69,6 +69,12 @@ else if($_GET["p"] == "search")
 		</tr>
 	</tbody>
 </table>
+<div class="container">
+	<nav>
+		<ul class="pagination justify-content-center" id="page_dis">
+		</ul>
+	</nav>
+</div>
 <?php
 }
 else if($_GET["p"] == "book" && isset($_GET["isbn"]))

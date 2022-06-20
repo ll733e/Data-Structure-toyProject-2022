@@ -52,6 +52,7 @@ else if($_POST["type"] == "bookinfo")
 {
     $req["reqType"] = 3;
     $req["req"]["isbn"] = $_POST["isbn"];
+    $req["req"]["id"] = isset($_SESSION["ID"]) ? $_SESSION["ID"] : "";
 
     $res = send_req($req);
 
@@ -77,8 +78,7 @@ else if($_POST["type"] == "booklist")
     {
         $req["reqType"] = 5;
         $req["req"]["query"] = $_POST["searchQuery"];
-        $req["req"]["qType"] = $_POST["searchType"];
-        $req["req"]["limit"] = (is_numeric($_POST["limit"]) && intval($_POST["limit"]) <= 20 && intval($_POST["limit"]) > 0 ) ? intval($_POST["limit"]) : 20;
+        $req["req"]["id"] = isset($_SESSION["ID"]) ? $_SESSION["ID"] : "";
         $req["req"]["page"] = (is_numeric($_POST["page"]) && intval($_POST["limit"]) > 0 ) ? intval($_POST["limit"]) : 1;
 
         $res = send_req($req);
