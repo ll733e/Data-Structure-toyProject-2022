@@ -3,9 +3,6 @@
 #include <string.h>
 #include "core.h"
 
-static char*    rentStat = "대출가능";
-static char*    resvStat = "예약가능";
-
 void addNode(Book _book) {
     Node*   curNode = (Node*)malloc(sizeof(Node));
     curNode->book   = _book;
@@ -224,7 +221,7 @@ int  logRespone(char *ID, char *HS) {
     FILE    *RFP;
     char    buf[256];
     char    getID[11];
-    char    getHS[66];
+    char    getHS[65];
     char    *ptel;
     //int     rtNum, rvNum;
 
@@ -234,17 +231,18 @@ int  logRespone(char *ID, char *HS) {
     
     memset(buf, 0, sizeof(buf));
     fgets(buf, sizeof(buf), RFP);       ptel  = strtok(buf, "\n");    strncpy(getID, ptel, 10);
-    fgets(buf, sizeof(buf), RFP);       ptel  = strtok(buf, "\n");    strncpy(getHS, buf, 65);
+    fgets(buf, sizeof(buf), RFP);       ptel  = strtok(buf, "\n");    strncpy(getHS, buf, 64);
     //fgets(buf, sizeof(buf), RFP);       rtNum = atoi(buf);
     //fgets(buf, sizeof(buf), RFP);       rvNum = atoi(buf);
     fclose(RFP);
-    if(strncmp(HS, getHS, 65 * sizeof(char)) != 0) { /* puts("[오류] 패스워드가 다릅니다!"); */ return -1; }
+    if(strncmp(HS, getHS, 64 * sizeof(char)) != 0) return -1;
     else    return 1;
     //printf("ID [%s]\tHS [%s]\nrtN [%d]\trvN [%d]\n", getID, getHS, rtNum, rvNum);
     return -1;
 }
 
 void logRequest(char *ID, char *HS) {
+    if(strlen(ID) != 10 || strlen(HS) != 64)    return;
     int     res = logRespone(ID, HS);
     if(res == 1)       { puts("로그인 성공!"); }
     else if(res == 2)  { puts("찾을 수 없는 계정입니다. 새로 파일을 만듭니다. 초기 비밀번호는 \"test\"입니다."); addUser(ID, TESTHASH, 0, 0); }
@@ -253,16 +251,6 @@ void logRequest(char *ID, char *HS) {
 }
 
 int main(int argc, char* argv[]) {
-    logRequest("2021270131", "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59");
-    /*
-    loadFile(3849);
-    //addUser("2021270131", "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59", 3, 10);
-    //if(argc == 1)           showAllInfo();
-    //else if(argc == 2)      searchall(argv[1]);  
-    char buf[256];
-    for(int i = 1 ; i < 40 ; i++) {
-        sprintf(buf, "%s%02d", "20213000",i);
-        addUser(buf, "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59", 3, 10);
-    } 
-    freeNodes();       */
+    //logRequest("2021270131", "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59");
+    logRequest("2021270139", "4888400e1fbc18408be8469b244be413d012f14c8080403f465447fab1a33d59");
 }

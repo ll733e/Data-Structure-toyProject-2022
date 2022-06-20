@@ -4,6 +4,7 @@
 #ifndef     __CORE_H__
 #define     __CORE_H__
 #define     AVAILABLE       20
+#define     BOOKNUM         3849
 
 #define     oriFILE    "../../data/book/book.dat"        // 원본파일
 #define     USERDIR    "..//..//data//user//"
@@ -32,6 +33,9 @@ typedef struct Node {
 
 Node*   pHead = NULL;
 Node*   pTail = NULL;
+
+static char*    rentStat = "대출가능";
+static char*    resvStat = "예약가능";
 
 void    addNode();         // 노드 insert 함수
 void    loadFile();        // 파일을 로드하는 함수
