@@ -39,30 +39,13 @@ else if($_GET["p"] == "search")
 {
 ?>
 <script src="inc/js/booklist.js"></script>
+<script src="inc/js/rental.js"></script>
 <div class="row">
 	<div class="col-md-10">
 		<form onsubmit="return search_book()" onload="default_book()" id="search_form">
 			<div class="row">
 				<div class="col">
 					<input type="text" class="form-control" id="q" placeholder="Search">
-				</div>
-				<div class="col">
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" id="title" name="qtype" checked>
-						<label class="form-check-label" for="title">Title</label>
-					</div>
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" id="author" name="qtype">
-						<label class="form-check-label" for="author">Author</label>
-					</div>
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" id="isbn" name="qtype">
-						<label class="form-check-label" for="isbn">ISBN10</label>
-					</div>
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" id="year" name="qtype">
-						<label class="form-check-label" for="year">Year</label>
-					</div>
 				</div>
 				<div class="col">
 					<button class="btn btn-primary" type="submit">찾기</button>
@@ -87,6 +70,42 @@ else if($_GET["p"] == "search")
 		</tr>
 	</tbody>
 </table>
+<?php
+}
+else if($_GET["p"] == "book" && isset($_GET["isbn"]))
+{
+?>
+<script src="inc/js/book.js"></script>
+<form id="curform" onload="getBook(<?php echo(htmlspecialchars($_GET['isbn'])); ?>)">
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-md-10">
+				<h3 id="title">asd</h3>
+			</div>
+			<div class="col-md-2">
+				<?php if(isset($_SESSION["ID"])) echo('<button type="button" id="btnrent" class="btn btn-dark">대여</button>'); ?>
+			</div>
+		</div>
+		<hr>
+		<div class="row">
+			<div class="col-md-4">
+				<img src="https://sejong.korea.ac.kr/mbshome/mbs/kr/images/sub/s_img0105_0301_1.jpg"/>
+			</div>
+			<div class="col-md-8">
+				<dl>
+					<dt>저자</dt>
+					<dd id="author"></dd>
+					<dt>출판사</dt>
+					<dd id="publisher"></dd>
+					<dt>출판년도</dt>
+					<dd id="publishYear"></dd>
+					<dt>대여 가능</dt>
+					<dd id="isAvailable"></dd>
+				</dl>
+			</div>
+		</div>
+	</div>
+</form>
 <?php
 }
 else
