@@ -4,6 +4,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include "parson.h"
 
 int tcpListen(int argc, char* argv[]) {
     int     serv_sock;
@@ -26,20 +27,40 @@ int tcpListen(int argc, char* argv[]) {
 
     clnt_addr_size = sizeof(clnt_addr);
 
+    JSON_Value *rootVal;
+    JSON_Object *rootObj;
+
     char buf[2048];
     int buf_len;
+
+    char res[2048];
+    int res_len;
 
     while (1)
     {
         clnt_sock = accept(serv_sock, (struct sockaddr*) &clnt_addr, &clnt_addr_size);
         if(clnt_sock == -1) puts("Accept Error");
+
         memset(buf, 0, sizeof(buf));
+        memset(res, 0, sizeof(res));
+        
         buf_len = read(serv_sock, buf, sizeof(buf)-1);
         if(buf_len == -1) puts("Read Error");
 
-        //Do somthing Here
+        rootVal = json_parse_string(buf);
+        rootObj = json_value_get_object(rootVal);
 
-        write(clnt_sock, res, sizeof(res));
+        switch((int)json_object_get_number(rootObj, "reqType"))
+        {
+            case 1: Login(res, res_len, json_object_string(rootObj, "id"), json_object_get_string(rootObj, "passwd")); break; //It's Login Request
+            case 3: Book(res, res_len, json_object_string(rootObj, "isbn")) break; //It's Book Request
+            case 5: BookList(res, res_len, json_object_get_string(rootObj, "query"), (int)json_object_get_number(rootObj, "limit"), (int)json_object_get_number(rootObj, "page")); break; //It's Book List Request
+            case 7: Rental(res, res_len, json_object_get_string(rootObj, "isbn"), json_object_get_string(rootObj, "id")); break; //It's Book rental Request
+            case 9: Return(res, res_len, json_object_get_string(rootObj, "isbn"), json_object_get_string(rootObj, "id")); break; //It's Book return Request
+        }
+        json_value_free(rootVal);
+
+        write(clnt_sock, res, res_len);
     }
     close(clnt_sock);
     close(serv_sock);
