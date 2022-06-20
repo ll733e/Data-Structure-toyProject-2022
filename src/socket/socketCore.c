@@ -49,14 +49,15 @@ int tcpListen(int argc, char* argv[]) {
 
         rootVal = json_parse_string(buf);
         rootObj = json_value_get_object(rootVal);
+        reqObj = json_object_get_object(rootObj, "req");
 
         switch((int)json_object_get_number(rootObj, "reqType"))
         {
-            case 1: Login(res, res_len, json_object_string(rootObj, "id"), json_object_get_string(rootObj, "passwd")); break; //It's Login Request
-            case 3: Book(res, res_len, json_object_string(rootObj, "isbn")) break; //It's Book Request
-            case 5: BookList(res, res_len, json_object_get_string(rootObj, "query"), (int)json_object_get_number(rootObj, "limit"), (int)json_object_get_number(rootObj, "page")); break; //It's Book List Request
-            case 7: Rental(res, res_len, json_object_get_string(rootObj, "isbn"), json_object_get_string(rootObj, "id")); break; //It's Book rental Request
-            case 9: Return(res, res_len, json_object_get_string(rootObj, "isbn"), json_object_get_string(rootObj, "id")); break; //It's Book return Request
+            case 1: Login(res, res_len, json_object_string(reqObj, "id"), json_object_get_string(reqObj, "passwd")); break; //It's Login Request
+            case 3: Book(res, res_len, json_object_string(reqObj, "isbn"), json_object_string(reqObj, "id")) break; //It's Book Request
+            case 5: BookList(res, res_len, json_object_get_string(reqObj, "query"), (int)json_object_get_number(reqObj, "id"), (int)json_object_get_number(reqObj, "page")); break; //It's Book List Request
+            case 7: Rental(res, res_len, json_object_get_string(reqObj, "isbn"), json_object_get_string(reqObj, "id")); break; //It's Book rental Request
+            case 9: Return(res, res_len, json_object_get_string(reqObj, "isbn"), json_object_get_string(reqObj, "id")); break; //It's Book return Request
             default: strcpy(res, "{\"res\":-1,\"msg\":\"Unknown Request\"}"); res_len = strlen(res);
         }
         json_value_free(rootVal);
