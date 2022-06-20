@@ -70,7 +70,7 @@ else if($_POST["type"] == "booklist")
         $res["book"][0]["publisher"] = "고려대학교";
         $res["book"][0]["author"] = "이서준";
         $res["book"][0]["publishYear"] = 2022;
-        $res["book"][0]["isAvailable"] = true;
+        $res["book"][0]["isAvailable"] = 1;
 
         echo(json_encode($res));
     }
@@ -79,7 +79,7 @@ else if($_POST["type"] == "booklist")
         $req["reqType"] = 5;
         $req["req"]["query"] = $_POST["searchQuery"];
         $req["req"]["id"] = isset($_SESSION["ID"]) ? $_SESSION["ID"] : "";
-        $req["req"]["page"] = (is_numeric($_POST["page"]) && intval($_POST["limit"]) > 0 ) ? intval($_POST["limit"]) : 1;
+        $req["req"]["page"] = (is_numeric($_POST["page"]) && intval($_POST["page"]) > 0 && intval($_POST["page"]) < 11) ? intval($_POST["page"]) : 1;
 
         $res = send_req($req);
 
@@ -106,6 +106,19 @@ else if($_POST["type"] == "return")
     {
         $req["reqType"] = 9;
         $req["req"]["isbn"] = $_POST["isbn"];
+        $req["req"]["ID"] = $_SESSION["ID"];
+
+        $res = send_req($req);
+
+        echo $res;
+    }
+    else echo('{"res":-1, "msg":"User not logged in"}');
+}
+else if($_POST["type"] == "rentlist")
+{
+    if(isset($_SESSION["ID"]))
+    {
+        $req["reqType"] = 11;
         $req["req"]["ID"] = $_SESSION["ID"];
 
         $res = send_req($req);

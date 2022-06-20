@@ -42,7 +42,7 @@ else if($_GET["p"] == "search")
 <script src="inc/js/rental.js"></script>
 <div class="row">
 	<div class="col-md-10">
-		<form onsubmit="return search_book(1)" onload="default_book()" id="search_form">
+		<form onsubmit="return search_book(1)" id="search_form">
 			<div class="row">
 				<div class="col">
 					<input type="text" class="form-control" id="q" placeholder="Search">
@@ -64,6 +64,7 @@ else if($_GET["p"] == "search")
 		<tr>
 			<td>
 				<div>
+				<div><p>검색 기능을 사용하세요.</p></div>
 				</div>
 			</td>
 		</tr>
@@ -113,9 +114,32 @@ else if($_GET["p"] == "book" && isset($_GET["isbn"]))
 </form>
 <?php
 }
+else if($_GET["p"] == "rentlist")
+{
+?>
+<script src="inc/js/rentlist.js"></script>
+<script src="inc/js/rental.js" onload="rentedbooks();"></script>
+<table class="table">
+	<thead>
+		<tr>
+			<th scope="col"></th>
+		</tr>
+	</thead>
+	<tbody id="booklist">
+		<tr>
+			<td>
+				<div>
+				<div><p>대여한 도서가 없습니다!</p></div>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<?php
+}
 else
 {
-
+	echo('<script>location.href = "/?p=login";</script>');
 }
 ?>
 			<br>

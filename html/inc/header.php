@@ -11,11 +11,13 @@ session_start();
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a class="nav-link active" href="">메인</a>
+                        <a class="nav-link active" href="?p=search">검색</a>
                     </li>
+                    <?php if(isset($_SESSION["ID"])) { ?>
                     <li class="nav-item">
-                        <a class="nav-link" href="?p=search">검색</a>
+                        <a class="nav-link" href="?p=rentlist">대여 목록</a>
                     </li>
+                    <?php } ?>
                 </ul>
                 <ul class="navbar-nav d-flex">
                     <?php if(isset($_SESSION["ID"])) { ?>
