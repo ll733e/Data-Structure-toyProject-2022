@@ -3,29 +3,11 @@
 #include <string.h>
 #include "core.h"
 
-void addNode(Book _book) {
-    Node*   curNode = (Node*)malloc(sizeof(Node));
-    curNode->book   = _book;
-    curNode->pNext  = NULL;
-
-    if(pHead == NULL)   pHead        = curNode;
-    else                pTail->pNext = curNode;
-    
-    pTail = curNode;
-}
-
-void deleteEndString(char *buf) {
-    int     i = 0;
-    while(buf[i]) i++;      i--;
-    while(buf[i] == ' ' || buf[i] == '\n') {
-        buf[i] = '\0';
-        i--;
-    }
-}
+//파일 로드 및 적재 부분
 
 void loadFile(int tolnum) {
     FILE*   RFP;
-    Book    book;
+    Book book;
     int     lenSTR;             // 길이 카운터의 버퍼 길이
     int     curNum = 0;
     char    line[500];
@@ -45,33 +27,22 @@ void loadFile(int tolnum) {
         //printf("%s\n%s\n%s\n%s\n\n", s1, s2, s3, s4);
         
         addNode(book);
-        printf("%s\n%s\n%s\n%s\n\n", book.TITLE, book.AUTHOR, book.YEAR, book.ISBN);
+        //printf("%s\n%s\n%s\n%s\n\n", book.TITLE, book.AUTHOR, book.YEAR, book.ISBN);
     }
     fclose(RFP);
 }
 
-void showInfoMain() {
-    Node    *curNode = pHead;
+void addNode(Book _book) {
+    Node*   curNode = (Node*)malloc(sizeof(Node));
+    curNode->book   = _book;
+    curNode->pNext  = NULL;
 
-    if(pHead == NULL) {
-        puts("현재 메모리에는 할당된 데이터가 없습니다. [-550 : HEAP FREE]");
-        return;
-    }
-    while(curNode != NULL) {
-        printf("%s %s %s %s\n", curNode->book.TITLE, curNode->book.AUTHOR, curNode->book.ISBN, curNode->book.YEAR);
-        curNode = curNode->pNext;
-    }
-    puts("");
+    if(pHead == NULL)   pHead        = curNode;
+    else                pTail->pNext = curNode;
+    
+    pTail = curNode;
 }
 
-void showSingleInfo(Book *_book) {
-    puts("");
-    printf("책 제목\t\t%s\n",   _book->TITLE);
-    printf("책 저자\t\t%s\n",   _book->AUTHOR);
-    printf("발행일자\t%s\n",     _book->YEAR);
-    printf("ISBN 정보\t%s\n",   _book->ISBN);
-}
-/*      노드 정보 전체 삭제 함수        */
 void freeNodes() {
     Node    *curNode = pHead;       // 헤드를 현재 노드로 설정
     Node    *delNode = NULL;
@@ -85,25 +56,16 @@ void freeNodes() {
     pHead = pTail = NULL;           // 이거 안 해주면 더블프리
 }
 
-void searchTitle() {
-    char    searchKey[256];
-    Node    *curNode = pHead;
-    memset(searchKey, 0, sizeof(searchKey));
-    
-    printf("검색할 단어를 입력하세요 >> ");
-    scanf("%[^\n]s", searchKey);
-
-    puts("[ 자료구조론 8팀 라이브러리 검색 결과 ]");
-    while(curNode != NULL) {
-        if(strcmp(curNode->book.TITLE, searchKey) == 0) {
-            printf("\"%s\"에 대한 검색 결과입니다.\n", searchKey);
-            showSingleInfo(&(curNode->book));
-        }
-        curNode = curNode->pNext;
+void deleteEndString(char *buf) {
+    int     i = 0;
+    while(buf[i]) i++;      i--;
+    while(buf[i] == ' ' || buf[i] == '\n') {
+        buf[i] = '\0';
+        i--;
     }
-    printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
-    return;
 }
+
+//도서 검색
 
 void searchall(char *searchKey) {
     //char    searchKey[256];
@@ -177,7 +139,7 @@ void searchall(char *searchKey) {
             curNode = curNode->pNext;
     }
     printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
-    return;
+    return menu();
             //printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
         }
     }
@@ -185,15 +147,30 @@ void searchall(char *searchKey) {
     fclose(RFP);
     //fclose(fp);
     free(title);    free(author);   free(isbn);     free(year);
-    return;
+
+    return menu();
 }
 
-void searchMain() {
+void BookList(char *res, int *res_len, char *searchKey, const int limit, const int page) {
+}
+
+void searchTitle() {
     char    searchKey[256];
+    Node    *curNode = pHead;
+    memset(searchKey, 0, sizeof(searchKey));
+    
     printf("검색할 단어를 입력하세요 >> ");
     scanf("%[^\n]s", searchKey);
 
-    searchall(searchKey);
+    puts("[ 자료구조론 8팀 라이브러리 검색 결과 ]");
+    while(curNode != NULL) {
+        if(strcmp(curNode->book.TITLE, searchKey) == 0) {
+            printf("\"%s\"에 대한 검색 결과입니다.\n", searchKey);
+            showSingleInfo(&(curNode->book));
+        }
+        curNode = curNode->pNext;
+    }
+    printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
     return;
 }
 
@@ -210,21 +187,7 @@ void searchISBN(char *searchKey) {
     return;
 }
 
-void addUser(char *ID, char *HASH, int rtNum, int rvNum) {
-    FILE    *WFP;
-    char    buf[256];
-    Book    book[20];
-    sprintf(buf, "%s%s%s", USERDIR, ID, FORMAT);
-
-    WFP = fopen(buf, "w+t");
-
-    fprintf(WFP, "%s\n", ID);
-    fprintf(WFP, "%s\n", HASH);
-    fprintf(WFP, "%d\n", rtNum);
-    fprintf(WFP, "%d\n", rvNum); // 목록 넣어보기
-
-    fclose(WFP);
-}
+//로그인
 
 int logRespone(char *ID, char *HS) {
     FILE    *RFP;
@@ -261,20 +224,57 @@ int logRequest(char *ID, char *HS) {
     return res;
 }
 
-int isAval(char *ISBN) {
+void Login(char *res, int *res_len, char *id, char *passwd) {
+    if(strlen(id) != 10 || strlen(passwd) != 64)    { strcpy(res, "{\"res\":-1,\"msg\":\"Input Error Occured\"}"); *res_len = strlen(res); return; }
+    switch (logRespone(id, passwd))
+    {
+    case 1:
+        strcpy(res, "{\"res\":1,\"msg\":\"Login Success\"}"); *res_len = strlen(res);
+        return;
+    case 2:
+        strcpy(res, "{\"res\":2,\"msg\":\"Account Not Exist\"}"); *res_len = strlen(res);
+        return;
+    case -1:
+        strcpy(res, "{\"res\":2,\"msg\":\"Password Incorrect\"}"); *res_len = strlen(res); 
+        return;
+    default:
+        strcpy(res, "{\"res\":-1,\"msg\":\"Unknown Error Occured\"}"); *res_len = strlen(res);
+        return;
+    }
+}
+
+void addUser(char *ID, char *HASH, int rtNum, int rvNum) {
+    FILE    *WFP;
+    char    buf[256];
+    Book    book[20];
+    sprintf(buf, "%s%s%s", USERDIR, ID, FORMAT);
+
+    WFP = fopen(buf, "w+t");
+
+    fprintf(WFP, "%s\n", ID);
+    fprintf(WFP, "%s\n", HASH);
+    fprintf(WFP, "%d\n", rtNum);
+    fprintf(WFP, "%d\n", rvNum); // 목록 넣어보기
+
+    fclose(WFP);
+}
+
+//도서 정보 출력
+
+
+//대여
+
+void Rental(char *res, int *res_len, char *ISBN, char *ID) {
     FILE    *RFP;
     char    buf[256];
     char    *p;
-    RFP = fopen("..//..//data//book//rented.dat", "r+t");
     
-    while(feof(RFP) == 0) {
-        fgets(buf, sizeof(buf), RFP);
-        if(strcmp(ISBN, p = strtok(buf, "\t")) == 0)    return  0;
-    }
+    if(isAval(ISBN) == 0) { strcpy(res, "{\"res\":2,\"msg\":\"Already rented by someone\"}"); *res_len = strlen(res); return; }
 
-    fclose(RFP);
-
-    return 1;
+    RFP = fopen("..//..//data//book//rented.dat", "a+");
+    fprintf(RFP, "%s\t%s\n", ISBN, ID);
+    fclose(RFP);   
+    strcpy(res, "{\"res\":1,\"msg\":\"Rent Successful\"}"); *res_len = strlen(res);
 }
 
 void rentBook(char *ID, char *ISBN) {
@@ -288,6 +288,57 @@ void rentBook(char *ID, char *ISBN) {
     fprintf(RFP, "%s\t%s\n", ISBN, ID);
     fclose(RFP);   
     printf("%s님은 %s을 대출하셨습니다.\n", ID, ISBN);
+}
+
+//반납
+
+void Return(char *res, int *res_len, char *ID, char *ISBN) {
+    FILE    *RFP, *WFP;
+    char    buf[256];
+    char    *p;
+    int     cnt = 0;
+    
+    if(isAval(ISBN) != 0) { strcpy(res, "{\"res\":2,\"msg\":\"Already returned\"}"); *res_len = strlen(res); return; }
+    
+    RFP = fopen(RTFILE, "r+t");
+    WFP = fopen(RBFILE, "w+t");
+
+    while(feof(RFP) == 0) {
+        fgets(buf, sizeof(buf), RFP);
+        // 반납하려는 ISBN 서칭
+        if(strcmp(ISBN, p = strtok(buf, "\t")) == 0) {  
+            // 해당 책을 대출한 사람이 지금의 ID인지 확인
+            if(strcmp(ID, p = strtok(NULL, "\n")) == 0) { 
+
+                fseek(RFP, 0, SEEK_SET);
+                fseek(WFP, 0, SEEK_SET);
+                // 파일 새로 쓰기 rented -> rentBUF
+                while(feof(RFP) == 0) {
+                    fgets(buf, sizeof(buf), RFP);
+                    if(strcmp(ISBN, p = strtok(buf , "\t")) != 0) { 
+                        fprintf(WFP, "%s\t", p);    p = strtok(NULL, "\n");
+                        fprintf(WFP, "%s\n", p); 
+                        }
+                }
+                strcpy(res, "{\"res\":1,\"msg\":\"Return Successful\"}"); *res_len = strlen(res); return;
+            }
+            else { strcpy(res, "{\"res\":2,\"msg\":\"You didnt rented this book!\"}"); *res_len = strlen(res); return; }
+        }
+    }
+    fclose(RFP);
+    fclose(WFP);
+
+    // 파일 덮어씌우기  RFP -> WFP
+    RFP = fopen(RBFILE, "rt");
+    WFP = fopen(RTFILE,  "wt");
+    
+    while(feof(RFP) == 0) {
+        cnt = fread(buf, sizeof(char), sizeof(buf), RFP);
+        fwrite(buf, sizeof(char), cnt, WFP);
+    }
+
+    fclose(RFP);
+    fclose(WFP);
 }
 
 void returnBook(char *ID, char *ISBN) {
@@ -339,8 +390,64 @@ void returnBook(char *ID, char *ISBN) {
     fclose(WFP);
 }
 
-void rentBookMain() {
+///
 
+void showInfoMain() {
+    Node    *curNode = pHead;
+
+    if(pHead == NULL) {
+        puts("현재 메모리에는 할당된 데이터가 없습니다. [-550 : HEAP FREE]");
+        return;
+    }
+    while(curNode != NULL) {
+        printf("%s | %s | %s | %s\n", curNode->book.TITLE, curNode->book.AUTHOR, curNode->book.YEAR, curNode->book.ISBN);
+        curNode = curNode->pNext;
+    }
+    puts("");
+    printf("%d개의 책 데이터를 로드했습니다.", BOOKNUM);
+    return menu();
+}
+
+void showSingleInfo(Book *_book) {
+    puts("");
+    printf("책 제목\t\t%s\n",   _book->TITLE);
+    printf("책 저자\t\t%s\n",   _book->AUTHOR);
+    printf("발행일자\t%s\n",     _book->YEAR);
+    printf("ISBN 정보\t%s\n",   _book->ISBN);
+}
+
+
+
+void searchMain() {
+    char    searchKey[256];
+    printf("검색할 단어를 입력하세요 >> ");
+    scanf("\n%[^\n]s", searchKey);
+
+    searchall(searchKey);
+    return;
+}
+
+int isAval(char *ISBN) {
+    FILE    *RFP;
+    char    buf[256];
+    char    *p;
+    RFP = fopen("..//..//data//book//rented.dat", "r+t");
+    
+    while(feof(RFP) == 0) {
+        fgets(buf, sizeof(buf), RFP);
+        if(strcmp(ISBN, p = strtok(buf, "\t")) == 0)    return  0;
+    }
+
+    fclose(RFP);
+
+    return 1;
+}
+
+void rentBookMain() {
+    Node    *curNode = pHead;
+    char    searchKey[256];
+    printf("대출하실 책을 입력하세요 >> ");
+    scanf("\n%[^\n]s", searchKey);    
 }
 
 void returnBookMain() {
@@ -351,16 +458,19 @@ void menu() {
     char    ip[256];
     int     ipN;
     loadFile(BOOKNUM);
+
     puts("\n자료구조론 도서대출 시스템(CUI ver.)\n");
     printf("1. 도서 목록\t3. 도서 대출\n");
     printf("2. 도서 검색\t4. 도서 반납\n");
+    printf("0. 종료\n");
     printf("\n서비스 항목을 고르세요 >> ");
-    scanf("%[^\n]s", ip);   ipN = atoi(ip);
-    
+    scanf("\n%[^\n]s", ip);   ipN = atoi(ip);
+
     if(ipN == 1)        showInfoMain();
     else if(ipN == 2)   searchMain();
     else if(ipN == 3)   rentBookMain();
     else if(ipN == 4)   returnBookMain();
+    else if(ipN == 0)   return;
     else                puts("잘못 입력하셨습니다.");
     //searchMain();
 }

@@ -41,11 +41,38 @@ Node*   rTail = NULL;
 static char*    rentStat = "대출가능";
 static char*    resvStat = "예약가능";
 
-void    addNode();         // 노드 insert 함수
-void    loadFile();        // 파일을 로드하는 함수
-void    showAllInfo();     // 모든 정보를 출력하는 함수
-void    showSingleInfo();  // 특정 정보를 하나만 출력하는 함수
-void    freeNodes();       // 노드 전체 프리
-void    searchNode();      // 단순 겹치는 문자열 검색 기능 
+// 파일 로드 및 적재 부분
+void loadFile(int tolnum);
+void addNode(Book _book);
+void freeNodes();
+void deleteEndString(char *buf);
 
+// 도서 검색
+void searchall(char *searchKey);
+void BookList(char *res, int *res_len, char *searchKey, const int limit, const int page);
+void searchTitle();
+void searchISBN(char *searchKey);
+
+// 로그인
+int logRespone(char *ID, char *HS);
+int logRequest(char *ID, char *HS);
+void Login(char *res, int *res_len, char *id, char *passwd);
+void addUser(char *ID, char *HASH, int rtNum, int rvNum);
+
+// 대여
+void Rental(char *res, int *res_len, char *ISBN, char *ID);
+void rentBook(char *ID, char *ISBN);
+
+// 반납
+void Return(char *res, int *res_len, char *ID, char *ISBN);
+void returnBook(char *ID, char *ISBN);
+
+void showInfoMain();
+void showSingleInfo(Book *_book);
+
+void searchMain();
+int isAval(char *ISBN);
+void rentBookMain();
+void returnBookMain();
+void menu();
 #endif  // __CORE_H__
