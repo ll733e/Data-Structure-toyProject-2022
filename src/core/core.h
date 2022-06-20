@@ -8,6 +8,8 @@
 
 #define     oriFILE    "../../data/book/book.dat"        // 원본파일
 #define     USERDIR    "..//..//data//user//"
+#define     RTFILE     "..//..//data//book//rented.dat"
+#define     RVFILE     "..//..//data//book//reserv.dat"
 #define     FORMAT     ".user"
 #define     TESTHASH   "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
 
@@ -18,21 +20,23 @@ typedef struct Book {
     char    ISBN[20];       // ISBN
 }   Book;
 
-typedef struct User {
-    char    ID[50];         // 식별할 수 있는 유저 아이디
-    char    HS[35];         // 해쉬
-    int     RVNum;          // 예약 도서 권수
-    Book    RT[AVAILABLE];  // 대출 중인 도서 목록
-    Book    *RV;            // 예약 도서 목록
-}   User;
-
 typedef struct Node {
     Book    book;
     struct  Node    *pNext;
 }   Node;
 
+typedef struct User {
+    char    ID[50];         // 식별할 수 있는 유저 아이디
+    char    HS[35];         // 해쉬
+    int     RVNum;          // 예약 도서 권수
+}   User;
+
+
+
 Node*   pHead = NULL;
 Node*   pTail = NULL;
+Node*   rHead = NULL;
+Node*   rTail = NULL;
 
 static char*    rentStat = "대출가능";
 static char*    resvStat = "예약가능";

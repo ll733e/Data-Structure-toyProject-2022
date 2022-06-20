@@ -241,16 +241,35 @@ int  logRespone(char *ID, char *HS) {
     return -1;
 }
 
-void logRequest(char *ID, char *HS) {
-    if(strlen(ID) != 10 || strlen(HS) != 64)    return;
+int logRequest(char *ID, char *HS) {
+    if(strlen(ID) != 10 || strlen(HS) != 64)    return -1;
     int     res = logRespone(ID, HS);
     if(res == 1)       { puts("로그인 성공!"); }
     else if(res == 2)  { puts("찾을 수 없는 계정입니다. 새로 파일을 만듭니다. 초기 비밀번호는 \"test\"입니다."); addUser(ID, TESTHASH, 0, 0); }
     else if(res == -1) { puts("패스워드가 틀렸습니다!"); }
     else               { puts("알 수 없는 오류입니다. 관리자에게 문의하세요."); }
+
+    return res;
+}
+
+void rentBook(char *ID, char *HS) {
+    User    curUser;
+    FILE    *WFP;
+    char    BUF[1024];
+
+    WFP = fopen(RTFILE, "a+");
+
+    fprintf(WFP, "%s\t%s\n", ID, HS);
+
+    fclose(WFP);
 }
 
 int main(int argc, char* argv[]) {
+    char    curID[11];
+    if(strlen(argv[1]) != 10)   return -1;
+    else                        strncpy(curID, argv[1], 10);
+
+    if(logRespone(curID, argv[2]) != 1)   return -1;
     //logRequest("2021270131", "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59");
-    logRequest("2021270139", "4888400e1fbc18408be8469b244be413d012f14c8080403f465447fab1a33d59");
+
 }
