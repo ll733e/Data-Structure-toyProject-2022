@@ -176,15 +176,12 @@ void searchTitle() {
 
 void searchISBN(char *searchKey) {
     Node    *curNode = pHead;
-
     while(curNode != NULL) {
         if(strcmp(curNode->book.ISBN, searchKey) == 0) {
-            printf("\"%s\"에 대한 검색 결과입니다.\n", searchKey);
             showSingleInfo(&(curNode->book));
         }
         curNode = curNode->pNext;
     }
-    return;
 }
 
 //로그인
@@ -226,8 +223,7 @@ int logRequest(char *ID, char *HS) {
 
 void Login(char *res, int *res_len, char *id, char *passwd) {
     if(strlen(id) != 10 || strlen(passwd) != 64)    { strcpy(res, "{\"res\":-1,\"msg\":\"Input Error Occured\"}"); *res_len = strlen(res); return; }
-    switch (logRespone(id, passwd))
-    {
+    switch (logRespone(id, passwd)) {
     case 1:
         strcpy(res, "{\"res\":1,\"msg\":\"Login Success\"}"); *res_len = strlen(res);
         return;
@@ -271,7 +267,7 @@ void Rental(char *res, int *res_len, char *ISBN, char *ID) {
     
     if(isAval(ISBN) == 0) { strcpy(res, "{\"res\":2,\"msg\":\"Already rented by someone\"}"); *res_len = strlen(res); return; }
 
-    RFP = fopen("..//..//data//book//rented.dat", "a+");
+    RFP = fopen(RTFILE, "a+");
     fprintf(RFP, "%s\t%s\n", ISBN, ID);
     fclose(RFP);   
     strcpy(res, "{\"res\":1,\"msg\":\"Rent Successful\"}"); *res_len = strlen(res);
@@ -284,10 +280,10 @@ void rentBook(char *ID, char *ISBN) {
     
     if(isAval(ISBN) == 0) { printf("[%s]은 이미 대출된 도서입니다.\n", ISBN); return; }
 
-    RFP = fopen("..//..//data//book//rented.dat", "a+");
+    RFP = fopen(RTFILE, "a+");
     fprintf(RFP, "%s\t%s\n", ISBN, ID);
     fclose(RFP);   
-    printf("%s님은 %s을 대출하셨습니다.\n", ID, ISBN);
+    printf("%s님이 대출하신 책은 다음과 같습니다. [%s]\n", ID, ISBN);
 }
 
 //반납
@@ -416,8 +412,6 @@ void showSingleInfo(Book *_book) {
     printf("ISBN 정보\t%s\n",   _book->ISBN);
 }
 
-
-
 void searchMain() {
     char    searchKey[256];
     printf("검색할 단어를 입력하세요 >> ");
@@ -439,22 +433,45 @@ int isAval(char *ISBN) {
     }
 
     fclose(RFP);
-
     return 1;
 }
 
-void rentBookMain() {
-    Node    *curNode = pHead;
-    char    searchKey[256];
+void rentBookMain(char *ID) {
+    char    TITLE[100];
+    char    rentKey[256];
     printf("대출하실 책을 입력하세요 >> ");
-    scanf("\n%[^\n]s", searchKey);    
+    scanf("\n%[^\n]s", rentKey);
+    rentBook(ID, rentKey);
 }
 
-void returnBookMain() {
-
+void returnBookMain(char *ID) {
+    char    buf[256];
+    printf("반납하려는 책 >> ");
+    scanf("\n%[^\n]s", buf);
+    
+    returnBook(ID, buf);
 }
 
-void menu() {
+void RentInfoMain(char *ID) {
+    FILE    *RFP;
+    char    buf[256];
+    char    curID[12];
+    char    *p, *p1;
+    int     cnt = 0;
+
+    strncpy(curID, ID, 10);
+
+    RFP = fopen(RTFILE, "r");
+    fseek(RFP, 0, SEEK_SET);
+    while(fgets(buf, sizeof(buf), RFP) != NULL) {
+        p = strtok(buf,  "\t"); p1 = strtok(NULL, "\n");
+        if(strncmp(curID, p1, 10) == 0) { cnt++; printf("%d번째 대출 중인 책 [%s]\n", cnt, p); }
+    }
+    fclose(RFP);
+    printf("현재 대출 중인 권수 [%d]\n", cnt);
+}
+
+void menu(char *ID) {
     char    ip[256];
     int     ipN;
     loadFile(BOOKNUM);
@@ -462,22 +479,24 @@ void menu() {
     puts("\n자료구조론 도서대출 시스템(CUI ver.)\n");
     printf("1. 도서 목록\t3. 도서 대출\n");
     printf("2. 도서 검색\t4. 도서 반납\n");
-    printf("0. 종료\n");
+    printf("5. 대출 목록\t0. 종료\n");
     printf("\n서비스 항목을 고르세요 >> ");
     scanf("\n%[^\n]s", ip);   ipN = atoi(ip);
 
-    if(ipN == 1)        showInfoMain();
-    else if(ipN == 2)   searchMain();
-    else if(ipN == 3)   rentBookMain();
-    else if(ipN == 4)   returnBookMain();
-    else if(ipN == 0)   return;
-    else                puts("잘못 입력하셨습니다.");
-    //searchMain();
+    switch (ipN) {
+    case 0:     return;
+    case 1:     showInfoMain();     break;
+    case 2:     searchMain();       break;
+    case 3:     rentBookMain(ID);   break;
+    case 4:     returnBookMain(ID); break;
+    case 5:     RentInfoMain(ID);   break;
+    default:    puts("잘못 입력하셨습니다"); break;
+    }
 }
 
 int main(int argc, char* argv[]) {
     char    curID[11] = "2021270131";
     char    curHS[65] = "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59";
     if(logRequest(curID, curHS) != 1) return 0;
-    else    menu();
+    else    menu(curID);
 }

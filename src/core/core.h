@@ -31,8 +31,6 @@ typedef struct User {
     int     RVNum;          // 예약 도서 권수
 }   User;
 
-
-
 Node*   pHead = NULL;
 Node*   pTail = NULL;
 Node*   rHead = NULL;
@@ -51,7 +49,7 @@ void deleteEndString(char *buf);
 void searchall(char *searchKey);
 void BookList(char *res, int *res_len, char *searchKey, const int limit, const int page);
 void searchTitle();
-void searchISBN(char *searchKey);
+///void searchISBN(char *searchKey);
 
 // 로그인
 int logRespone(char *ID, char *HS);
@@ -72,7 +70,9 @@ void showSingleInfo(Book *_book);
 
 void searchMain();
 int isAval(char *ISBN);
-void rentBookMain();
+void rentBookMain(char *ID);
 void returnBookMain();
 void menu();
+void RentInfoMain(char *ID);
+
 #endif  // __CORE_H__
