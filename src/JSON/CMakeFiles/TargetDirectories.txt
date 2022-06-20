@@ -1,3 +1,0 @@
-/Users/louxsoen/P/Data-Structures-Algorithms/src/JSON/CMakeFiles/start.out.dir
-/Users/louxsoen/P/Data-Structures-Algorithms/src/JSON/CMakeFiles/edit_cache.dir
-/Users/louxsoen/P/Data-Structures-Algorithms/src/JSON/CMakeFiles/rebuild_cache.dir
