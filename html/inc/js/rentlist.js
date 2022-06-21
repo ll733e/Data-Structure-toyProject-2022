@@ -28,7 +28,6 @@ function rentedbooks()
 
     var data = new FormData();
     data.append("type", "rentlist");
-
     post.send(data);
 
     return false;

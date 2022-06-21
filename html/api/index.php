@@ -14,7 +14,7 @@ function send_req($req)
         if(!$sock) return '{"res":-1,"msg":"Unable to create socket"}';
         $conn = socket_connect($sock, "127.0.0.1", 8080);
         if(!$conn) return '{"res":-1,"msg":"Unable to connect to Back-End Server"}';
-        socket_write($sock, $reqs, strlen($reqs));
+        socket_write($sock, $req, strlen($req));
         $res = socket_read($sock, 2048);
     }
     catch(Exception $e)
@@ -60,31 +60,14 @@ else if($_POST["type"] == "bookinfo")
 }
 else if($_POST["type"] == "booklist")
 {
-    if($_POST["debug"] == "1")
-    {
-        $res["res"] = 1;
-        $res["msg"] = "";
-        $res["count"] = 1;
-        $res["book"][0]["isbn"] = "1234";
-        $res["book"][0]["bookTitle"] = "조별 과제를 잘 하는 법";
-        $res["book"][0]["publisher"] = "고려대학교";
-        $res["book"][0]["author"] = "이서준";
-        $res["book"][0]["publishYear"] = 2022;
-        $res["book"][0]["isAvailable"] = 1;
+    $req["reqType"] = 5;
+    $req["req"]["query"] = $_POST["searchQuery"];
+    $req["req"]["id"] = isset($_SESSION["ID"]) ? $_SESSION["ID"] : "";
+    $req["req"]["page"] = (is_numeric($_POST["page"]) && intval($_POST["page"]) > 0 && intval($_POST["page"]) < 11) ? intval($_POST["page"]) : 1;
 
-        echo(json_encode($res));
-    }
-    else
-    {
-        $req["reqType"] = 5;
-        $req["req"]["query"] = $_POST["searchQuery"];
-        $req["req"]["id"] = isset($_SESSION["ID"]) ? $_SESSION["ID"] : "";
-        $req["req"]["page"] = (is_numeric($_POST["page"]) && intval($_POST["page"]) > 0 && intval($_POST["page"]) < 11) ? intval($_POST["page"]) : 1;
+    $res = send_req($req);
 
-        $res = send_req($req);
-
-        echo $res;
-    }
+    echo $res;
 }
 else if($_POST["type"] == "rental")
 {

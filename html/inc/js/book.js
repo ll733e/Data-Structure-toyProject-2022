@@ -28,7 +28,7 @@ function getBook(isbn)
     }
 
     var data = new FormData();
-    data.append("type", "rental");
+    data.append("type", "bookinfo");
     data.append("isbn", isbn);
 
     post.send(data);

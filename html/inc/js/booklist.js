@@ -17,8 +17,8 @@ function search_book(page)
                 switch(row.isAvailable)
                 {
                     case -1: available = '<button type="submit" class="btn btn-dark" disabled>대여</button>'; break;
-                    case 1 : available = '<button type="submit" class="btn btn-dark" onclick="reqRent(' + row.isbn + ');">대여</button>'; break;
-                    case 2 : available = '<button type="submit" class="btn btn-danger" onClick="reqReturn(' + row.isbn + ');">반납</button>'; break;
+                    case 1 : available = '<button id="' + row.bookTitle.replace(/\s/g, '') + '" type="submit" class="btn btn-dark" onclick="reqRent(this,\''+ row.isbn.trim() +'\')">대여</button>'; break;
+                    case 2 : available = '<button type="submit" class="btn btn-danger" onClick="reqReturn(this, \'' + row.isbn.trim() + '\');">반납</button>'; break;
                 }
                 console.log(row);
                 booklist.innerHTML += '<tr><td><div class="container"><div class="row"><div class="col-auto me-auto"><a href="?p=book&isbn=' + row.isbn + '">' + row.bookTitle + '</a><p>' + row.author + ' / ' + row.publisher + ' / ' + row.publishYear + '</p></div><div class="col-auto"><br>' + available + '</div></div></td></tr>';
@@ -33,7 +33,7 @@ function search_book(page)
 
     var data = new FormData();
     data.append("type", "booklist");
-    data.append("debug", "1");
+    //data.append("debug", "1");
     data.append("searchQuery", search_form.q.value);
     data.append("page", page);
 
