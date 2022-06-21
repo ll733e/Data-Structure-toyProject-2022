@@ -117,6 +117,7 @@ void searchall(char *searchKey) {
     if(searchNum ==  0) {
         printf("%s 아닌데요 없는데요", searchKey);
     }
+    
     free(title);
     free(author);
     free(isbn);
@@ -401,13 +402,29 @@ int isAval(char *ISBN) {
     FILE    *RFP;
     char    buf[256];
     char    *p;
-    RFP = fopen("..//..//data//book//rented.dat", "r+t");
+    RFP = fopen(RTFILE, "r+t");
     
     while(feof(RFP) == 0) {
         fgets(buf, sizeof(buf), RFP);
         if(strcmp(ISBN, p = strtok(buf, "\t")) == 0)    return  0;
     }
 
+    fclose(RFP);
+    return 1;
+}
+
+int frontAval(char *ID, char *ISBN) {
+    FILE    *RFP;
+    char    buf[256];
+    char    *p;
+    RFP = fopen(RTFILE, "rt");
+    
+    while(fgets(buf, sizeof(buf), RFP) != NULL) {
+        if(strcmp(p = strtok(buf, "\t"), ISBN) == 0) {
+            if(strncmp(ID, p = strtok(NULL, "\n"), 10) == 0) return 2;
+            else    return -1;
+        }
+    }
     fclose(RFP);
     return 1;
 }
@@ -471,9 +488,12 @@ void menu(char *ID) {
 }
 
 int main(int argc, char* argv[]) {
-    char    curID[11] = "2021270131";
+    /*char    curID[11] = "2021270131";
     char    curHS[65] = "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59";
     loadFile(BOOKNUM);
     if(logRequest(curID, curHS) != 1) return 0;
     else    menu(curID);
+
+    */
+    printf("%d\n", frontAval("2021270131", "978-89-374-2981-1"));
 }
