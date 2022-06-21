@@ -29,6 +29,7 @@ int tcpListen(int argc, char* argv[]) {
 
     JSON_Value *rootVal;
     JSON_Object *rootObj;
+    JSON_Object *reqObj;
 
     char buf[2048];
     int buf_len;
@@ -58,6 +59,7 @@ int tcpListen(int argc, char* argv[]) {
             case 5: BookList(res, res_len, json_object_get_string(reqObj, "query"), (int)json_object_get_number(reqObj, "id"), (int)json_object_get_number(reqObj, "page")); break; //It's Book List Request
             case 7: Rental(res, res_len, json_object_get_string(reqObj, "isbn"), json_object_get_string(reqObj, "id")); break; //It's Book rental Request
             case 9: Return(res, res_len, json_object_get_string(reqObj, "isbn"), json_object_get_string(reqObj, "id")); break; //It's Book return Request
+            case 11: RentalList(res, res_len, json_object_get_string(reqObj,"id")); break;
             default: strcpy(res, "{\"res\":-1,\"msg\":\"Unknown Request\"}"); res_len = strlen(res);
         }
         json_value_free(rootVal);
