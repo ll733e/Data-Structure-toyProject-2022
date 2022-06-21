@@ -46,35 +46,37 @@ void freeNodes();
 void deleteEndString(char *buf);
 
 // 도서 검색
-
-void BookList(char *res, int *res_len, char *searchKey, char *ID);
 void searchall(char *searchKey);
+void BookList(char *res, int *res_len, const char *searchKey, const char *ID);
 void searchTitle();
 Book rentSearch(char *searchKey);
 ///void searchISBN(char *searchKey);
 
 // 로그인
-int logRespone(char *ID, char *HS);
-int logRequest(char *ID, char *HS);
-void Login(char *res, int *res_len, char *id, char *passwd);
-void addUser(char *ID, char *HASH, int rtNum, int rvNum);
+int logRespone(const char *ID, const char *HS);
+int logRequest(const char *ID, const char *HS);
+void Login(char *res, int *res_len, const char *id, const char *passwd);
+void addUser(const char *ID, const char *HASH, int rtNum, int rvNum);
 
 // 대여
-void Rental(char *res, int *res_len, char *ISBN, char *ID);
+void Rental(char *res, int *res_len, const char *ISBN, const char *ID);
 void rentBook(char *ID, char *ISBN);
 
 // 반납
-void Return(char *res, int *res_len, char *ID, char *ISBN);
+void Return(char *res, int *res_len, const char *ID, const char *ISBN);
 void returnBook(char *ID, char *ISBN);
 
 void showInfoMain();
 void showSingleInfo(Book *_book);
 
 void searchMain();
-int isAval(char *ISBN);
+int isAval(const char *ISBN);
 void rentBookMain(char *ID);
 void returnBookMain();
 void menu();
 void RentInfoMain(char *ID);
+int frontAval(const char *ID, const char *ISBN);
+
+int tcpListen();
 
 #endif  // __CORE_H__
