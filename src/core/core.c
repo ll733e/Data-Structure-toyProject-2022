@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "core.h"
+#include "json/parson.h"
 
 //파일 로드 및 적재 부분
 
@@ -125,8 +126,93 @@ void searchall(char *searchKey) {
     free(tmp);
 }
 
-void BookList(char *res, int *res_len, char *searchKey, const int limit, const int page) {
-    // 내가 짜야하는거?
+void BookList(char *res, int *res_len, char *searchKey, char *ID) {
+    Node    *curNode    = pHead;
+    char    *title, *author, *isbn, *year, *tmp;
+    char    *sptr;
+    int     searchNum = 0;
+    Book    sResult[10];
+
+    title   = malloc(sizeof(curNode->book.TITLE));  strncpy(title,curNode->book.TITLE,   sizeof(curNode->book.TITLE));
+    author  = malloc(sizeof(curNode->book.AUTHOR)); strncpy(author,curNode->book.AUTHOR, sizeof(curNode->book.AUTHOR));
+    isbn    = malloc(sizeof(curNode->book.ISBN));   strncpy(isbn,curNode->book.ISBN,     sizeof(curNode->book.ISBN));
+    year    = malloc(sizeof(curNode->book.YEAR));   strncpy(year,curNode->book.YEAR,     sizeof(curNode->book.YEAR));
+    tmp     = malloc(sizeof(curNode->book.TITLE) + sizeof(curNode->book.AUTHOR) + sizeof(curNode->book.ISBN) + sizeof(curNode->book.YEAR));
+
+    while(curNode != NULL) {
+        sprintf(tmp, "%s %s %s %s", curNode->book.TITLE, curNode->book.AUTHOR, curNode->book.ISBN, curNode->book.YEAR);
+
+        if(strcmp(title, searchKey) == 0) {
+            if(searchNum < 10) {
+                strncpy(sResult[searchNum].TITLE, curNode->book.TITLE,      sizeof(curNode->book.TITLE));
+                strncpy(sResult[searchNum].AUTHOR, curNode->book.AUTHOR,    sizeof(curNode->book.AUTHOR));
+                strncpy(sResult[searchNum].ISBN, curNode->book.ISBN,        sizeof(curNode->book.ISBN));
+                strncpy(sResult[searchNum].YEAR, curNode->book.YEAR,        sizeof(curNode->book.YEAR));
+            }
+            showSingleInfo(&(curNode->book));
+            searchNum++;
+            curNode = curNode->pNext;
+            continue;
+        }
+
+        sptr = strtok(tmp, ",\t ");
+
+        while(sptr != NULL) {
+            if(strcmp(sptr, searchKey) == 0) {
+                if(searchNum < 10) {
+                    strncpy(sResult[searchNum].TITLE, curNode->book.TITLE,      sizeof(curNode->book.TITLE));
+                    strncpy(sResult[searchNum].AUTHOR, curNode->book.AUTHOR,    sizeof(curNode->book.AUTHOR));
+                    strncpy(sResult[searchNum].ISBN, curNode->book.ISBN,        sizeof(curNode->book.ISBN));
+                    strncpy(sResult[searchNum].YEAR, curNode->book.YEAR,        sizeof(curNode->book.YEAR));
+                }
+                showSingleInfo(&(curNode->book));
+                searchNum++;
+                break;
+            }
+            sptr = strtok(NULL,",\t ");
+        }
+        curNode = curNode->pNext;
+    }
+    int len = (searchNum < 10) ? searchNum : 10;
+
+    JSON_Value *rootVal = json_value_init_object();
+    JSON_Object *rootObj = json_value_get_object(rootVal);
+
+    JSON_Value *tmpv;
+    JSON_Object *tmpo;
+
+    json_object_set_number(rootObj, "res", (searchNum) ? 1 : 2);
+    json_object_set_string(rootObj, "msg", (searchNum) ? "Success" : "Failed");
+    json_object_set_number(rootObj, "count", searchNum);
+    json_object_set_value(rootObj, "book", json_value_init_array());
+    
+    JSON_Array *book = json_object_get_array(rootObj, "book");
+
+    for(int i=0; i < len; i++)
+    {
+        tmpv = json_value_init_object();
+        tmpo = json_value_get_object(tmpv);
+        json_object_set_string(tmpo,"isbn", sResult[i].ISBN);
+        json_object_set_string(tmpo,"bookTitle", sResult[i].TITLE);
+        json_object_set_string(tmpo,"author", sResult[i].AUTHOR);
+        json_object_set_string(tmpo,"publishYear", sResult[i].YEAR);
+        json_object_set_number(tmpo,"isAvailable", frontAval(ID, sResult[i].ISBN));
+        json_array_append_value(book,tmpv);
+    }
+    
+    char *serial = json_serialize_to_string(rootVal);
+    strcpy(res, serial);
+    *res_len = strlen(res);
+
+    json_value_free(rootVal);
+    json_value_free(tmpv);
+    json_free_serialized_string(serial);
+
+    free(title);
+    free(author);
+    free(isbn);
+    free(year);
+    free(tmp);
 }
 
 void searchTitle() {
@@ -555,6 +641,7 @@ void menu(char *ID) {
 
     freeNodes();
 }
+
 
 int main(int argc, char* argv[]) {
     char    curID[11] = "2021270131";

@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
-#include "parson.h"
+#include "json/parson.h"
 
 int tcpListen(int argc, char* argv[]) {
     int     serv_sock;
