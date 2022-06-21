@@ -1,12 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
 #include "core.h"
-#include "json/parson.h"
-#include "socket/socketCore.h"
 
 //파일 로드 및 적재 부분
 
@@ -126,93 +121,6 @@ void searchall(char *searchKey) {
     free(tmp);
 }
 
-void BookList(char *res, int *res_len, const char *searchKey, const char *ID) {
-    Node    *curNode    = pHead;
-    char    *title, *author, *isbn, *year, *tmp;
-    char    *sptr;
-    int     searchNum = 0;
-    Book    sResult[10];
-
-    title   = malloc(sizeof(curNode->book.TITLE));  strncpy(title,curNode->book.TITLE,   sizeof(curNode->book.TITLE));
-    author  = malloc(sizeof(curNode->book.AUTHOR)); strncpy(author,curNode->book.AUTHOR, sizeof(curNode->book.AUTHOR));
-    isbn    = malloc(sizeof(curNode->book.ISBN));   strncpy(isbn,curNode->book.ISBN,     sizeof(curNode->book.ISBN));
-    year    = malloc(sizeof(curNode->book.YEAR));   strncpy(year,curNode->book.YEAR,     sizeof(curNode->book.YEAR));
-    tmp     = malloc(sizeof(curNode->book.TITLE) + sizeof(curNode->book.AUTHOR) + sizeof(curNode->book.ISBN) + sizeof(curNode->book.YEAR));
-
-    while(curNode != NULL) {
-        sprintf(tmp, "%s %s %s %s", curNode->book.TITLE, curNode->book.AUTHOR, curNode->book.ISBN, curNode->book.YEAR);
-
-        if(strcmp(title, searchKey) == 0) {
-            if(searchNum < 10) {
-                strncpy(sResult[searchNum].TITLE, curNode->book.TITLE,      sizeof(curNode->book.TITLE));
-                strncpy(sResult[searchNum].AUTHOR, curNode->book.AUTHOR,    sizeof(curNode->book.AUTHOR));
-                strncpy(sResult[searchNum].ISBN, curNode->book.ISBN,        sizeof(curNode->book.ISBN));
-                strncpy(sResult[searchNum].YEAR, curNode->book.YEAR,        sizeof(curNode->book.YEAR));
-            }
-            searchNum++;
-            curNode = curNode->pNext;
-            continue;
-        }
-
-        sptr = strtok(tmp, ",\t ");
-
-        while(sptr != NULL) {
-            if(strcmp(sptr, searchKey) == 0) {
-                if(searchNum < 10) {
-                    strncpy(sResult[searchNum].TITLE, curNode->book.TITLE,      sizeof(curNode->book.TITLE));
-                    strncpy(sResult[searchNum].AUTHOR, curNode->book.AUTHOR,    sizeof(curNode->book.AUTHOR));
-                    strncpy(sResult[searchNum].ISBN, curNode->book.ISBN,        sizeof(curNode->book.ISBN));
-                    strncpy(sResult[searchNum].YEAR, curNode->book.YEAR,        sizeof(curNode->book.YEAR));
-                }
-                searchNum++;
-                break;
-            }
-            sptr = strtok(NULL,",\t ");
-        }
-        curNode = curNode->pNext;
-    }
-    int len = (searchNum < 10) ? searchNum : 10;
-
-    JSON_Value *rootVal = json_value_init_object();
-    JSON_Object *rootObj = json_value_get_object(rootVal);
-
-    JSON_Value *tmpv;
-    JSON_Object *tmpo;
-
-    json_object_set_number(rootObj, "res", (searchNum) ? 1 : 2);
-    json_object_set_string(rootObj, "msg", (searchNum) ? "Success" : "Failed");
-    json_object_set_number(rootObj, "count", searchNum);
-    json_object_set_value(rootObj, "book", json_value_init_array());
-    
-    JSON_Array *book = json_object_get_array(rootObj, "book");
-
-    for(int i=0; i < len; i++)
-    {
-        tmpv = json_value_init_object();
-        tmpo = json_value_get_object(tmpv);
-        json_object_set_string(tmpo,"isbn", sResult[i].ISBN);
-        json_object_set_string(tmpo,"bookTitle", sResult[i].TITLE);
-        json_object_set_string(tmpo,"author", sResult[i].AUTHOR);
-        json_object_set_string(tmpo,"publishYear", sResult[i].YEAR);
-        json_object_set_number(tmpo,"isAvailable", frontAval(ID, sResult[i].ISBN));
-        json_array_append_value(book,tmpv);
-    }
-    
-    char *serial = json_serialize_to_string(rootVal);
-    strcpy(res, serial);
-    *res_len = strlen(res);
-
-    json_value_free(rootVal);
-    json_value_free(tmpv);
-    json_free_serialized_string(serial);
-
-    free(title);
-    free(author);
-    free(isbn);
-    free(year);
-    free(tmp);
-}
-
 void searchTitle() {
     char    searchKey[256];
     Node    *curNode = pHead;
@@ -232,37 +140,6 @@ void searchTitle() {
     printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
     return;
 }
-
-void BookInfo(char *res, int *res_len, const char *isbn, const char *ID)
-{
-    Node *curNode = pHead;
-    while(curNode != NULL)
-    {
-        if(strcmp(curNode->book.ISBN, isbn) == 0)
-        {
-            JSON_Value *rootVal = json_value_init_object();
-            JSON_Object *rootObj = json_value_get_object(rootVal);
-            json_object_set_number(rootObj, "res", 1);
-            json_object_set_string(rootObj, "msg", "Success");
-            json_object_dotset_string(rootObj, "book.isbn", curNode->book.ISBN);
-            json_object_dotset_string(rootObj, "book.bookTitle", curNode->book.TITLE);
-            json_object_dotset_string(rootObj, "book.author", curNode->book.AUTHOR);
-            json_object_dotset_string(rootObj, "book.publishYear", curNode->book.YEAR);
-            json_object_dotset_number(rootObj, "book.isAvailable", frontAval(ID, curNode->book.ISBN));
-            char *serial = json_serialize_to_string(rootVal);
-            strncpy(res, serial, strlen(serial));
-            *res_len = strlen(res);
-            json_free_serialized_string(serial);
-            json_value_free(rootVal);
-
-            return;
-        }
-        curNode = curNode->pNext;
-    }
-    strcpy(res, "{\"res\":2,\"msg\":\"Book Not Found\"}");
-    return;
-}
-
 /*
 void searchISBN(char *searchKey) {
     Node    *curNode = pHead;
@@ -312,23 +189,6 @@ int logRequest(const char *ID, const char *HS) {
     return res;
 }
 
-void Login(char *res, int *res_len, const char *id, const char *passwd) {
-    if(strlen(id) != 10 || strlen(passwd) != 64)    { strcpy(res, "{\"res\":-1,\"msg\":\"Input Error Occured\"}"); *res_len = strlen(res); return; }
-    switch (logRespone(id, passwd)) {
-    case 1:
-        strcpy(res, "{\"res\":1,\"msg\":\"Login Success\"}"); *res_len = strlen(res);
-        return;
-    case 2:
-        strcpy(res, "{\"res\":2,\"msg\":\"Account Not Exist\"}"); *res_len = strlen(res);
-        return;
-    case -1:
-        strcpy(res, "{\"res\":2,\"msg\":\"Password Incorrect\"}"); *res_len = strlen(res); 
-        return;
-    default:
-        strcpy(res, "{\"res\":-1,\"msg\":\"Unknown Error Occured\"}"); *res_len = strlen(res);
-        return;
-    }
-}
 
 void addUser(const char *ID, const char *HASH, int rtNum, int rvNum) {
     FILE    *WFP;
@@ -348,22 +208,6 @@ void addUser(const char *ID, const char *HASH, int rtNum, int rvNum) {
 
 //도서 정보 출력
 
-
-//대여
-
-void Rental(char *res, int *res_len, const char *ISBN, const char *ID) {
-    FILE    *RFP;
-    char    buf[256];
-    char    *p;
-    
-    if(isAval(ISBN) == 0) { strcpy(res, "{\"res\":2,\"msg\":\"Already rented by someone\"}"); *res_len = strlen(res); return; }
-
-    RFP = fopen(RTFILE, "a+");
-    fprintf(RFP, "%s\t%s\n", ISBN, ID);
-    fclose(RFP);
-    strcpy(res, "{\"res\":1,\"msg\":\"Rent Successful\"}"); *res_len = strlen(res);
-}
-
 void rentBook(char *ID, char *ISBN) {
     FILE    *RFP;
     char    buf[256];
@@ -379,55 +223,6 @@ void rentBook(char *ID, char *ISBN) {
 }
 
 //반납
-
-void Return(char *res, int *res_len, const char *ID, const char *ISBN) {
-    FILE    *RFP, *WFP;
-    char    buf[256];
-    char    *p;
-    int     cnt = 0;
-    
-    if(isAval(ISBN) != 0) { strcpy(res, "{\"res\":2,\"msg\":\"Already returned\"}"); *res_len = strlen(res); return; }
-    
-    RFP = fopen(RTFILE, "r+t");
-    WFP = fopen(RBFILE, "w+t");
-
-    while(feof(RFP) == 0) {
-        fgets(buf, sizeof(buf), RFP);
-        // 반납하려는 ISBN 서칭
-        if(strcmp(ISBN, p = strtok(buf, "\t")) == 0) {  
-            // 해당 책을 대출한 사람이 지금의 ID인지 확인
-            if(strcmp(ID, p = strtok(NULL, "\n")) == 0) { 
-
-                fseek(RFP, 0, SEEK_SET);
-                fseek(WFP, 0, SEEK_SET);
-                // 파일 새로 쓰기 rented -> rentBUF
-                while(feof(RFP) == 0) {
-                    fgets(buf, sizeof(buf), RFP);
-                    if(strcmp(ISBN, p = strtok(buf , "\t")) != 0) { 
-                        fprintf(WFP, "%s\t", p);    p = strtok(NULL, "\n");
-                        fprintf(WFP, "%s\n", p); 
-                        }
-                }
-                strcpy(res, "{\"res\":1,\"msg\":\"Return Successful\"}"); *res_len = strlen(res); return;
-            }
-            else { strcpy(res, "{\"res\":2,\"msg\":\"You didnt rented this book!\"}"); *res_len = strlen(res); return; }
-        }
-    }
-    fclose(RFP);
-    fclose(WFP);
-
-    // 파일 덮어씌우기  RFP -> WFP
-    RFP = fopen(RBFILE, "rt");
-    WFP = fopen(RTFILE,  "wt");
-    
-    while(feof(RFP) == 0) {
-        cnt = fread(buf, sizeof(char), sizeof(buf), RFP);
-        fwrite(buf, sizeof(char), cnt, WFP);
-    }
-
-    fclose(RFP);
-    fclose(WFP);
-}
 
 void returnBook(char *ID, char *ISBN) {
     FILE    *RFP, *WFP;
@@ -514,7 +309,7 @@ void searchMain() {
     return;
 }
 
-int isAval(const char *ISBN) {
+int isAval(char *ISBN) {
     FILE    *RFP;
     char    buf[256];
     char    *p;
@@ -670,91 +465,11 @@ void menu(char *ID) {
 
     freeNodes();
 }
-/*
-int tcpListen() {
-    int     serv_sock;
-    int     clnt_sock;
-   
-    struct sockaddr_in serv_addr;
-    struct sockaddr_in clnt_addr;
-    socklen_t clnt_addr_size;
-
-    puts("Starting TCP Socket...");
-   
-    serv_sock = socket(PF_INET, SOCK_STREAM, 0); 
-    if(serv_sock == -1) puts("Socket Error");
-    
-    memset(&serv_addr, 0, sizeof(serv_addr)); 
-    serv_addr.sin_family        = AF_INET;
-    serv_addr.sin_addr.s_addr   = htonl(INADDR_ANY);
-    serv_addr.sin_port          = htons(atoi("8080"));
-    
-    if(bind(serv_sock, (struct sockaddr*) &serv_addr, sizeof(serv_addr)) == -1) puts("Bind Error");
-    if(listen(serv_sock, 5) == -1) puts("Listen Error");
-
-    clnt_addr_size = sizeof(clnt_addr);
-
-    JSON_Value *rootVal;
-    JSON_Object *rootObj;
-    JSON_Object *reqObj;
-
-    char buf[2048];
-    int buf_len;
-
-    char res[2048];
-    int res_len;
-
-    while (1)
-    {
-        clnt_sock = accept(serv_sock, (struct sockaddr*) &clnt_addr, &clnt_addr_size);
-        if(clnt_sock == -1) puts("Accept Error");
-
-        puts("Client Connected");
-
-        memset(buf, 0, sizeof(buf));
-        memset(res, 0, sizeof(res));
-
-        puts("pos0");
-
-        buf_len = read(clnt_sock, buf, sizeof(buf));
-        if(buf_len == -1) puts("Read Error");
-
-        puts(buf);
-
-        puts("pos1");
-        rootVal = json_parse_string(buf);
-        puts("pos2");
-        rootObj = json_value_get_object(rootVal);
-        puts("pos3");
-        reqObj = json_object_get_object(rootObj, "req");
-
-
-        switch((int)json_object_get_number(rootObj, "reqType"))
-        {
-            case 1: Login(res, &res_len, json_object_get_string(reqObj, "id"), json_object_get_string(reqObj, "passwd")); break; //It's Login Request
-            case 3: BookInfo(res, &res_len, json_object_get_string(reqObj, "isbn"), json_object_get_string(reqObj, "id")); break; //It's Book Request
-            case 5: BookList(res, &res_len, json_object_get_string(reqObj, "query"), json_object_get_string(reqObj, "id")); break; //It's Book List Request
-            case 7: Rental(res, &res_len, json_object_get_string(reqObj, "isbn"), json_object_get_string(reqObj, "id")); break; //It's Book rental Request
-            case 9: Return(res, &res_len, json_object_get_string(reqObj, "isbn"), json_object_get_string(reqObj, "id")); break; //It's Book return Request
-            //case 11: RentalList(res, &res_len, json_object_get_string(reqObj,"id")); break;
-            default: strcpy(res, "{\"res\":-1,\"msg\":\"Unknown Request\"}"); res_len = strlen(res);
-        }
-        json_value_free(rootVal);
-        puts(res);
-        write(clnt_sock, res, res_len);
-    }
-    close(clnt_sock);
-    close(serv_sock);
-    
-    return 0;
-}
-*/
 
 int main(int argc, char* argv[]) {
-    //char    curID[11] = "2021270131";
-    //char    curHS[65] = "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59";
+    char    curID[11] = "2021270131";
+    char    curHS[65] = "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59";
     loadFile(BOOKNUM);
-    //if(logRequest(curID, curHS) != 1) return 0;
-    //else    menu(curID);
-    return tcpListen();
+    if(logRequest(curID, curHS) != 1) return 0;
+    else    menu(curID);
 }

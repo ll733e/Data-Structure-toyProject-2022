@@ -53,10 +53,10 @@ Book rentSearch(char *searchKey);
 ///void searchISBN(char *searchKey);
 
 // 로그인
-int logRespone(char *ID, char *HS);
-int logRequest(char *ID, char *HS);
+int logRespone(const char *ID, const char *HS);
+int logRequest(const char *ID, const char *HS);
 void Login(char *res, int *res_len, char *id, char *passwd);
-void addUser(char *ID, char *HASH, int rtNum, int rvNum);
+void addUser(const char *ID, const char *HASH, int rtNum, int rvNum);
 
 // 대여
 void Rental(char *res, int *res_len, char *ISBN, char *ID);
@@ -70,7 +70,7 @@ void showInfoMain();
 void showSingleInfo(Book *_book);
 
 void searchMain();
-int isAval(char *ISBN);
+int  isAval(char *ISBN);
 void rentBookMain(char *ID);
 void returnBookMain();
 void menu();
