@@ -7,7 +7,7 @@ function do_login()
     post.onload = () =>
     {
         var res = JSON.parse(post.responseText);
-        if(res.res)
+        if(res.res == 1)
         {
             location.href = "/"
         }
