@@ -2,9 +2,13 @@
 #include <stdlib.h> 
 #include <string.h>
 #include <unistd.h>
+<<<<<<< Updated upstream
 #include <arpa/inet.h>
 #include <sys/socket.h>
 #include "json/parson.h"
+=======
+#include "parson.h"
+>>>>>>> Stashed changes
 
 int tcpListen(int argc, char* argv[]) {
     int     serv_sock;
