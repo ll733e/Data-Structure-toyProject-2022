@@ -115,7 +115,7 @@ void searchall(char *searchKey) {
         curNode = curNode->pNext;
     }
     if(searchNum ==  0) {
-        printf("%s 아닌데요 없는데요", searchKey);
+        printf("\"%s\"와 일치하는 검색어를 찾지 못 했습니다.\n", searchKey);
     }
     
     free(title);
@@ -429,20 +429,87 @@ int frontAval(char *ID, char *ISBN) {
     return 1;
 }
 
+Book rentSearch(char *searchKey) {
+    Node    *curNode    = pHead;
+    char    *title, *author, *isbn, *year, *tmp;
+    char    *sptr;
+    int     searchNum = 0;
+    Book    sResult[10];
+
+    title   = malloc(sizeof(curNode->book.TITLE));  strncpy(title,curNode->book.TITLE,   sizeof(curNode->book.TITLE));
+    author  = malloc(sizeof(curNode->book.AUTHOR)); strncpy(author,curNode->book.AUTHOR, sizeof(curNode->book.AUTHOR));
+    isbn    = malloc(sizeof(curNode->book.ISBN));   strncpy(isbn,curNode->book.ISBN,     sizeof(curNode->book.ISBN));
+    year    = malloc(sizeof(curNode->book.YEAR));   strncpy(year,curNode->book.YEAR,     sizeof(curNode->book.YEAR));
+    tmp     = malloc(sizeof(curNode->book.TITLE) + sizeof(curNode->book.AUTHOR) + sizeof(curNode->book.ISBN) + sizeof(curNode->book.YEAR));
+
+    while(curNode != NULL) {
+        sprintf(tmp, "%s %s %s %s", curNode->book.TITLE, curNode->book.AUTHOR, curNode->book.ISBN, curNode->book.YEAR);
+
+        if(strcmp(title, searchKey) == 0) {
+            if(searchNum < 10) {
+                strncpy(sResult[searchNum].TITLE, curNode->book.TITLE,      sizeof(curNode->book.TITLE));
+                strncpy(sResult[searchNum].AUTHOR, curNode->book.AUTHOR,    sizeof(curNode->book.AUTHOR));
+                strncpy(sResult[searchNum].ISBN, curNode->book.ISBN,        sizeof(curNode->book.ISBN));
+                strncpy(sResult[searchNum].YEAR, curNode->book.YEAR,        sizeof(curNode->book.YEAR));
+            }
+            showSingleInfo(&(curNode->book));
+            searchNum++;
+            curNode = curNode->pNext;
+            continue;
+        }
+
+        sptr = strtok(tmp, ",\t ");
+
+        while(sptr != NULL) {
+            if(strcmp(sptr, searchKey) == 0) {
+                if(searchNum < 10) {
+                    strncpy(sResult[searchNum].TITLE, curNode->book.TITLE,      sizeof(curNode->book.TITLE));
+                    strncpy(sResult[searchNum].AUTHOR, curNode->book.AUTHOR,    sizeof(curNode->book.AUTHOR));
+                    strncpy(sResult[searchNum].ISBN, curNode->book.ISBN,        sizeof(curNode->book.ISBN));
+                    strncpy(sResult[searchNum].YEAR, curNode->book.YEAR,        sizeof(curNode->book.YEAR));
+                }
+                showSingleInfo(&(curNode->book));
+                searchNum++;
+                break;
+            }
+            sptr = strtok(NULL,",\t ");
+        }
+        curNode = curNode->pNext;
+    }
+    free(title);
+    free(author);
+    free(isbn);
+    free(year);
+    free(tmp);
+
+    return sResult[0];
+}
+
 void rentBookMain(char *ID) {
     char    TITLE[100];
     char    rentKey[256];
+    char    *pISBN;
     printf("대출하실 책을 입력하세요 >> ");
     scanf("\n%[^\n]s", rentKey);
-    rentBook(ID, rentKey);
+
+    pISBN = rentSearch(rentKey).ISBN;
+    if(pISBN[strlen(pISBN) - 1] == '\0') { puts("도서 목록에 없는 책입니다."); return; }
+    else {
+        pISBN[strlen(pISBN) -1] = '\0';
+        rentBook(ID, pISBN);
+    }
 }
 
 void returnBookMain(char *ID) {
     char    buf[256];
+    char    *pISBN;
     printf("반납하려는 책 >> ");
     scanf("\n%[^\n]s", buf);
+
+    pISBN = rentSearch(buf).ISBN;
+    pISBN[strlen(pISBN) -1] = '\0';
     
-    returnBook(ID, buf);
+    returnBook(ID, pISBN);
 }
 
 void RentInfoMain(char *ID) {
@@ -457,17 +524,18 @@ void RentInfoMain(char *ID) {
     RFP = fopen(RTFILE, "r");
     fseek(RFP, 0, SEEK_SET);
     while(fgets(buf, sizeof(buf), RFP) != NULL) {
-        p = strtok(buf,  "\t"); p1 = strtok(NULL, "\n");
-        if(strncmp(curID, p1, 10) == 0) { cnt++; printf("%d번째 대출 중인 책 [%s]\n", cnt, p); }
+        p = strtok(buf,  "\t");
+        if(strncmp(curID, p1= strtok(NULL, "\n"), 10) == 0) { cnt++; printf("%d번째 대출 중인 책 %s [%s]\n", cnt, rentSearch(p).TITLE, p); }
+        
     }
     fclose(RFP);
+
     printf("현재 대출 중인 권수 [%d]\n", cnt);
 }
 
 void menu(char *ID) {
     char    ip[256];
     int     ipN;
-    
 
     puts("\n자료구조론 도서대출 시스템(CUI ver.)\n");
     printf("1. 도서 목록\t2. 도서 검색\n");
@@ -488,12 +556,9 @@ void menu(char *ID) {
 }
 
 int main(int argc, char* argv[]) {
-    /*char    curID[11] = "2021270131";
+    char    curID[11] = "2021270131";
     char    curHS[65] = "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59";
     loadFile(BOOKNUM);
     if(logRequest(curID, curHS) != 1) return 0;
     else    menu(curID);
-
-    */
-    printf("%d\n", frontAval("2021270131", "978-89-374-2981-1"));
 }
