@@ -9,7 +9,7 @@ function do_login()
         var res = JSON.parse(post.responseText);
         if(res.res == 1)
         {
-            location.href = "/"
+            location.href = "/?p=search"
         }
         else
         {

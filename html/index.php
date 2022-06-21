@@ -12,7 +12,7 @@ if($_GET["p"] == "login")
 	if(isset($_SESSION["ID"]))
 	{
 		echo("Already Logged In!");
-		echo('<script>location.href="/";</script>');
+		echo('<script>location.href="/?p=search";</script>');
 	}
 	else
 	{
@@ -33,7 +33,7 @@ if($_GET["p"] == "login")
 else if($_GET["p"] == "logout")
 {
 	session_destroy();
-	echo('<script>location.href = "/";</script>');
+	echo('<script>location.href = "/?p=search";</script>');
 }
 else if($_GET["p"] == "search")
 {
@@ -86,7 +86,7 @@ else if($_GET["p"] == "book" && isset($_GET["isbn"]))
 	<div class="container-fluid">
 		<div class="row">
 			<div class="col-md-10">
-				<h3 id="title">asd</h3>
+				<h3 id="title"></h3>
 			</div>
 			<div class="col-md-2">
 				<?php if(isset($_SESSION["ID"])) echo('<button type="button" id="btnrent" class="btn btn-dark">대여</button>'); ?>

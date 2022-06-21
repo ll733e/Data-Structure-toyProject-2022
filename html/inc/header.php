@@ -24,7 +24,7 @@ session_start();
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"><?php echo $_SESSION["ID"]; ?></a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="?q=logout">로그아웃</a></li>
+                            <li><a class="dropdown-item" href="?p=logout">로그아웃</a></li>
                         </ul>
                     </li>
                     <?php } else { ?>
