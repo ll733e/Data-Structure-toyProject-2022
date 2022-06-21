@@ -40,7 +40,7 @@ static char*    rentStat = "대출가능";
 static char*    resvStat = "예약가능";
 
 // 파일 로드 및 적재 부분
-void loadFile(int tolnum);
+void loadFile();
 void addNode(Book _book);
 void freeNodes();
 void deleteEndString(char *buf);

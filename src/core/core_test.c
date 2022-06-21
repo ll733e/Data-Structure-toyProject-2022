@@ -156,29 +156,26 @@ void searchall(char *searchKey) {
 
 void searchall(char *searchKey) {
     Node    *curNode = pHead;
-    char *title,*author,*isbn,*year;
-    char *sptr, *tmp;
-    int searchNum = 0;
-    Book sResult[10];
+    char    *title, *author, *isbn, *year, *tmp;
+    char    *sptr;
+    int     searchNum = 0;
+    Book    sResult[10];
 
     title   = malloc(sizeof(curNode->book.TITLE));  strncpy(title,curNode->book.TITLE,   sizeof(curNode->book.TITLE));
     author  = malloc(sizeof(curNode->book.AUTHOR)); strncpy(author,curNode->book.AUTHOR, sizeof(curNode->book.AUTHOR));
     isbn    = malloc(sizeof(curNode->book.ISBN));   strncpy(isbn,curNode->book.ISBN,     sizeof(curNode->book.ISBN));
     year    = malloc(sizeof(curNode->book.YEAR));   strncpy(year,curNode->book.YEAR,     sizeof(curNode->book.YEAR));
-    tmp     = malloc(sizeof(curNode->book.TITLE) + sizeof(curNode->book.AUTHOR) + sizeof(curNode->book.ISBN)+ sizeof(curNode->book.YEAR));
+    tmp     = malloc(sizeof(curNode->book.TITLE) + sizeof(curNode->book.AUTHOR) + sizeof(curNode->book.ISBN) + sizeof(curNode->book.YEAR));
 
-    while(curNode != NULL)
-    {
+    while(curNode != NULL) {
         sprintf(tmp, "%s %s %s %s", curNode->book.TITLE, curNode->book.AUTHOR, curNode->book.ISBN, curNode->book.YEAR);
 
-        if(strcmp(title, searchKey) == 0)
-        {
-            if(searchNum < 10)
-            {
-                strncpy(sResult[searchNum].TITLE, curNode->book.TITLE, sizeof(curNode->book.TITLE));
-                strncpy(sResult[searchNum].AUTHOR, curNode->book.AUTHOR, sizeof(curNode->book.AUTHOR));
-                strncpy(sResult[searchNum].ISBN, curNode->book.ISBN, sizeof(curNode->book.ISBN));
-                strncpy(sResult[searchNum].YEAR, curNode->book.YEAR, sizeof(curNode->book.YEAR));
+        if(strcmp(title, searchKey) == 0) {
+            if(searchNum < 10) {
+                strncpy(sResult[searchNum].TITLE, curNode->book.TITLE,      sizeof(curNode->book.TITLE));
+                strncpy(sResult[searchNum].AUTHOR, curNode->book.AUTHOR,    sizeof(curNode->book.AUTHOR));
+                strncpy(sResult[searchNum].ISBN, curNode->book.ISBN,        sizeof(curNode->book.ISBN));
+                strncpy(sResult[searchNum].YEAR, curNode->book.YEAR,        sizeof(curNode->book.YEAR));
             }
             showSingleInfo(&(curNode->book));
             searchNum++;
@@ -188,16 +185,13 @@ void searchall(char *searchKey) {
 
         sptr = strtok(tmp, ",\t ");
 
-        while(sptr != NULL)
-        {
-            if(strcmp(sptr, searchKey) == 0)
-            {
-                if(searchNum < 10)
-                {
-                    strncpy(sResult[searchNum].TITLE, curNode->book.TITLE, sizeof(curNode->book.TITLE));
-                    strncpy(sResult[searchNum].AUTHOR, curNode->book.AUTHOR, sizeof(curNode->book.AUTHOR));
-                    strncpy(sResult[searchNum].ISBN, curNode->book.ISBN, sizeof(curNode->book.ISBN));
-                    strncpy(sResult[searchNum].YEAR, curNode->book.YEAR, sizeof(curNode->book.YEAR));
+        while(sptr != NULL) {
+            if(strcmp(sptr, searchKey) == 0) {
+                if(searchNum < 10) {
+                    strncpy(sResult[searchNum].TITLE, curNode->book.TITLE,      sizeof(curNode->book.TITLE));
+                    strncpy(sResult[searchNum].AUTHOR, curNode->book.AUTHOR,    sizeof(curNode->book.AUTHOR));
+                    strncpy(sResult[searchNum].ISBN, curNode->book.ISBN,        sizeof(curNode->book.ISBN));
+                    strncpy(sResult[searchNum].YEAR, curNode->book.YEAR,        sizeof(curNode->book.YEAR));
                 }
                 showSingleInfo(&(curNode->book));
                 searchNum++;
@@ -205,23 +199,20 @@ void searchall(char *searchKey) {
             }
             sptr = strtok(NULL,",\t ");
         }
-        
         curNode = curNode->pNext;
     }
-    if(searchNum ==  0)
-    {
-        printf("none");
+    if(searchNum ==  0) {
+        printf("%s 아닌데요 없는데요", searchKey);
     }
     free(title);
     free(author);
     free(isbn);
     free(year);
     free(tmp);
-
-    return menu();
 }
 
 void BookList(char *res, int *res_len, char *searchKey, const int limit, const int page) {
+    // 내가 짜야하는거?
 }
 
 void searchTitle() {
@@ -472,7 +463,6 @@ void showInfoMain() {
     }
     puts("");
     printf("%d개의 책 데이터를 로드했습니다.", BOOKNUM);
-    return menu();
 }
 
 void showSingleInfo(Book *_book) {
@@ -556,7 +546,7 @@ void menu(char *ID) {
     printf("\n서비스 항목을 고르세요 >> ");
     scanf("\n%[^\n]s", ip);   ipN = atoi(ip);
 
-    switch (ipN) {
+    switch(ipN) {
     case 0:     return;
     case 1:     showInfoMain();     break;
     case 2:     searchMain();       break;
