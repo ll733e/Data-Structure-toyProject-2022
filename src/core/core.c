@@ -557,9 +557,9 @@ void menu(char *ID) {
 }
 
 int main(int argc, char* argv[]) {
-    char    curID[11] = "2021270130";
-    //char    curHS[65] = "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59";
+    char    curID[11] = "2021270131";
+    char    curHS[65] = "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59";
     loadFile(BOOKNUM);
-    if(logRequest(curID, TESTHASH) != 1) return 0;
+    if(logRequest(curID, curHS) != 1) return 0;
     else    menu(curID);
 }
