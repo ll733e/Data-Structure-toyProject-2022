@@ -148,7 +148,7 @@ void searchTitle() {
     printf("\n\"%s\"에 대한 검색 결과가 없습니다.\n", searchKey);
     return;
 }
-
+/*
 void searchISBN(char *searchKey) {
     Node    *curNode = pHead;
     while(curNode != NULL) {
@@ -158,6 +158,7 @@ void searchISBN(char *searchKey) {
         curNode = curNode->pNext;
     }
 }
+*/
 
 //로그인
 
@@ -252,14 +253,14 @@ void rentBook(char *ID, char *ISBN) {
     FILE    *RFP;
     char    buf[256];
     char    *p;
-    
     //if (searchall(ISBN)) // 기반으로 도서 데이터 유무 확인
     if(isAval(ISBN) == 0) { printf("[%s]은 이미 대출된 도서입니다.\n", ISBN); return; }
 
     RFP = fopen(RTFILE, "a+");
     fprintf(RFP, "%s\t%s\n", ISBN, ID);
     fclose(RFP);
-    printf("%s님이 대출하신 책은 다음과 같습니다. [%s]\n", ID, ISBN);
+    p = rentSearch(ISBN).TITLE;
+    printf("%s님이 대출하신 책은 다음과 같습니다. %s [%s]\n", ID, p, ISBN);
 }
 
 //반납
@@ -452,7 +453,7 @@ Book rentSearch(char *searchKey) {
                 strncpy(sResult[searchNum].ISBN, curNode->book.ISBN,        sizeof(curNode->book.ISBN));
                 strncpy(sResult[searchNum].YEAR, curNode->book.YEAR,        sizeof(curNode->book.YEAR));
             }
-            showSingleInfo(&(curNode->book));
+            //showSingleInfo(&(curNode->book));
             searchNum++;
             curNode = curNode->pNext;
             continue;
@@ -468,7 +469,7 @@ Book rentSearch(char *searchKey) {
                     strncpy(sResult[searchNum].ISBN, curNode->book.ISBN,        sizeof(curNode->book.ISBN));
                     strncpy(sResult[searchNum].YEAR, curNode->book.YEAR,        sizeof(curNode->book.YEAR));
                 }
-                showSingleInfo(&(curNode->book));
+                //showSingleInfo(&(curNode->book));
                 searchNum++;
                 break;
             }
@@ -495,7 +496,7 @@ void rentBookMain(char *ID) {
     pISBN = rentSearch(rentKey).ISBN;
     if(pISBN[strlen(pISBN) - 1] == '\0') { puts("도서 목록에 없는 책입니다."); return; }
     else {
-        pISBN[strlen(pISBN) -1] = '\0';
+        //pISBN[strlen(pISBN) -1] = '\0';
         rentBook(ID, pISBN);
     }
 }
@@ -507,7 +508,7 @@ void returnBookMain(char *ID) {
     scanf("\n%[^\n]s", buf);
 
     pISBN = rentSearch(buf).ISBN;
-    pISBN[strlen(pISBN) -1] = '\0';
+    //pISBN[strlen(pISBN) -1] = '\0';
     
     returnBook(ID, pISBN);
 }
@@ -525,7 +526,7 @@ void RentInfoMain(char *ID) {
     fseek(RFP, 0, SEEK_SET);
     while(fgets(buf, sizeof(buf), RFP) != NULL) {
         p = strtok(buf,  "\t");
-        if(strncmp(curID, p1= strtok(NULL, "\n"), 10) == 0) { cnt++; printf("%d번째 대출 중인 책 %s [%s]\n", cnt, rentSearch(p).TITLE, p); }
+        if(strncmp(curID, p1 = strtok(NULL, "\n"), 10) == 0) { cnt++; printf("%d번째 대출 중인 책 %s [%s]\n", cnt, rentSearch(p).TITLE, p); }
         
     }
     fclose(RFP);

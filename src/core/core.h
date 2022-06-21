@@ -49,6 +49,7 @@ void deleteEndString(char *buf);
 void searchall(char *searchKey);
 void BookList(char *res, int *res_len, char *searchKey, const int limit, const int page);
 void searchTitle();
+Book rentSearch(char *searchKey);
 ///void searchISBN(char *searchKey);
 
 // 로그인
