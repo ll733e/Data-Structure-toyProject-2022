@@ -377,7 +377,7 @@ void showInfoMain() {
         curNode = curNode->pNext;
     }
     puts("");
-    printf("%d개의 책 데이터를 로드했습니다.", BOOKNUM);
+    printf("%d개의 책 데이터를 로드했습니다.\n", BOOKNUM);
 }
 
 void showSingleInfo(Book *_book) {
@@ -409,7 +409,6 @@ int isAval(char *ISBN) {
         fgets(buf, sizeof(buf), RFP);
         if(strcmp(ISBN, p = strtok(buf, "\t")) == 0)    return  0;
     }
-
     fclose(RFP);
     return 1;
 }
@@ -433,7 +432,7 @@ int frontAval(char *ID, char *ISBN) {
 Book rentSearch(char *searchKey) {
     Node    *curNode    = pHead;
     char    *title, *author, *isbn, *year, *tmp;
-    char    *sptr;
+    char    *sptr = NULL;
     int     searchNum = 0;
     Book    sResult[10];
 
@@ -483,22 +482,21 @@ Book rentSearch(char *searchKey) {
     free(year);
     free(tmp);
 
+    if(searchNum == 0) { strcpy(sResult[1].ISBN, "0"); return sResult[1]; }
     return sResult[0];
 }
 
 void rentBookMain(char *ID) {
-    char    TITLE[100];
-    char    rentKey[256];
-    char    *pISBN;
+    char    TITLE[100] = { "" };
+    char    rentKey[256] = { "" };
+    char    *pISBN = NULL;
     printf("대출하실 책을 입력하세요 >> ");
     scanf("\n%[^\n]s", rentKey);
 
+    fflush(stdin);
     pISBN = rentSearch(rentKey).ISBN;
-    if(pISBN[strlen(pISBN) - 1] == '\0') { puts("도서 목록에 없는 책입니다."); return; }
-    else {
-        //pISBN[strlen(pISBN) -1] = '\0';
-        rentBook(ID, pISBN);
-    }
+    if(pISBN == NULL || strncmp(pISBN, "0", 1) == 0) { puts("도서 목록에 없는 책입니다."); return; }
+    else    rentBook(ID, pISBN);
 }
 
 void returnBookMain(char *ID) {
@@ -554,12 +552,14 @@ void menu(char *ID) {
     case 5:     RentInfoMain(ID);   break;
     default:    puts("잘못 입력하셨습니다"); break;
     }
+
+    freeNodes();
 }
 
 int main(int argc, char* argv[]) {
-    char    curID[11] = "2021270131";
-    char    curHS[65] = "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59";
+    char    curID[11] = "2021270130";
+    //char    curHS[65] = "4888400e1fbc18408be8469b244be413b012f14c8080403f465447fab1a33d59";
     loadFile(BOOKNUM);
-    if(logRequest(curID, curHS) != 1) return 0;
+    if(logRequest(curID, TESTHASH) != 1) return 0;
     else    menu(curID);
 }
